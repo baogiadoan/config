@@ -148,4 +148,4 @@ alias zshconfig="nvim ~/.zshrc"
 alias ta="tmux a -t"
 alias tls="tmux ls"
 alias tn="tmux new -s"
-alias config='$HOME/git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
+alias config='/usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
