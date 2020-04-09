@@ -2,7 +2,7 @@
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
 
 # Path to your oh-my-zsh installation.
-export ZSH="/home/user/.oh-my-zsh"
+export ZSH="$HOME/.oh-my-zsh"
 
 # Set name of the theme to load --- if set to "random", it will
 # load a random theme each time oh-my-zsh is loaded, in which case,
@@ -148,4 +148,4 @@ alias zshconfig="nvim ~/.zshrc"
 alias ta="tmux a -t"
 alias tls="tmux ls"
 alias tn="tmux new -s"
-alias config='/usr/bin/git --git-dir=/home/user/.cfg/ --work-tree=/home/user'
+alias config='/usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
