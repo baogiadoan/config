@@ -92,4 +92,23 @@ vnoremap _( <Esc>`>a)<Esc>`<i(<Esc>
 let g:ale_linters = {'python': ['flake8']}
 let g:ale_fixers = {'*':[], 'python': ['black']}
 
+"==================================================
+"split config
+" 
+set splitbelow splitright
+" => Open terminal inside Vim
+map <Leader>tt :vnew term://zsh<CR>
+" => Change 2 split windows from vert to horiz or horiz to vert
+map <Leader>th <C-w>t<C-w>H
+map <Leader>tk <C-w>t<C-w>K
 
+
+"==================================================
+"TERMINAL mode
+
+tnoremap <Esc> <C-\><C-n>
+
+
+"==================================================
+"set relative
+set relativenumber
