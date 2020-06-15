@@ -149,3 +149,4 @@ alias ta="tmux a -t"
 alias tls="tmux ls"
 alias tn="tmux new -s"
 alias config='/usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
+alias p="python"

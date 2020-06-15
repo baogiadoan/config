@@ -5,6 +5,7 @@
 	clean = git-lfs clean -- %f
 	smudge = git-lfs smudge -- %f
 	process = git-lfs filter-process
+	required = true
 	
 
 # define command which will be used when "nvim" is set as a merge tool
