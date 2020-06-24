@@ -235,7 +235,7 @@ set hidden
 set nobackup
 set nowritebackup
 
-" Give more space for displaying messages.
+ "Give more space for displaying messages.
 set cmdheight=2
 
 " Having longer updatetime (default is 4000 ms = 4 s) leads to noticeable
@@ -357,6 +357,17 @@ command! -nargs=0 OR   :call     CocAction('runCommand', 'editor.action.organize
 " Add (Neo)Vim's native statusline support.
 " NOTE: Please see `:h coc-status` for integrations with external plugins that
 " provide custom statusline: lightline.vim, vim-airline.
+"
+" Disable vim-airline integration:
+let g:airline#extensions#coc#enabled = 0
+" Change error symbol:
+let airline#extensions#coc#error_symbol = 'Error:'
+"Change warning symbol:
+let airline#extensions#coc#warning_symbol = 'Warning:'
+"Change error format:
+let airline#extensions#coc#stl_format_err = '%E{[%e(#%fe)]}'
+"Change warning format:
+let airline#extensions#coc#stl_format_warn = '%W{[%w(#%fw)]}'
 set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
 
 " Mappings using CoCList:
