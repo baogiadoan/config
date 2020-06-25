@@ -17,3 +17,6 @@
 # automatically launch merge tool without displaying a prompt
 [mergetool]
   prompt = false
+[user]
+	name = Bao Doan
+	email = giabaodoan1320@gmail.com
