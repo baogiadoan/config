@@ -2,14 +2,14 @@
 
 "colorscheme carbonized-dark
 "colorscheme badwolf
-"colorscheme gruvbox
+colorscheme gruvbox
 syntax on
 "colorscheme onedark
 
 "base16 theme config
 let base16colorspace=256
 set termguicolors
-colorscheme base16-chalk
+"colorscheme base16-chalk
 "
 
 "Setting for YouCompleteMe

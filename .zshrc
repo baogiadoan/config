@@ -165,3 +165,4 @@ test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell
 
 alias ls=colorls — light — sort-dirs — report
 alias lc=colorls — tree — light
+export PATH="${PATH}:${HOME}/.local/bin/"
