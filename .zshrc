@@ -99,6 +99,21 @@ plugins=(
 #ZSH_TMUX_CONFIG = '$HOME/.tmux.conf.local'
 
 
+
+
+# Install Ruby Gems to ~/gems
+export GEM_HOME="$HOME/gems"
+export PATH="$HOME/gems/bin:$PATH"
+export PATH="$HOME/.rbenv/bin:$PATH"
+#
+# Vi mode
+source $ZSH/oh-my-zsh.sh
+
+bindkey -v
+# User configuration
+
+# export MANPATH="/usr/local/man:$MANPATH"
+#
 # added by Anaconda3 5.3.0 installer
 # >>> conda init >>>
 # !! Contents within this block are managed by 'conda init' !!
@@ -115,23 +130,8 @@ else
 fi
 unset __conda_setup
 # <<< conda init <<<
-#
-# set Pytorch env as the defaul conda env
 
 
-# Install Ruby Gems to ~/gems
-export GEM_HOME="$HOME/gems"
-export PATH="$HOME/gems/bin:$PATH"
-export PATH="$HOME/.rbenv/bin:$PATH"
-#
-# Vi mode
-source $ZSH/oh-my-zsh.sh
-
-bindkey -v
-conda activate pytorch
-# User configuration
-
-# export MANPATH="/usr/local/man:$MANPATH"
 
 # You may need to manually set your language environment
 # export LANG=en_US.UTF-8
@@ -152,6 +152,7 @@ fi
 # For a full list of active aliases, run `alias`.
 #
 # Example aliases
+conda activate pytorch
 alias zshconfig="nvim ~/.zshrc"
 #alias ohmyzsh="mate ~/.oh-my-zsh"
 alias ta="tmux a -t"
@@ -165,3 +166,18 @@ test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell
 
 alias ls=colorls — light — sort-dirs — report
 alias lc=colorls — tree — light
+alias vi=nvim
+alias openshot="~/OpenShot-v2.5.1-x86_64.AppImage"
+
+
+#Weather
+alias weather='figlet "Weather" | lolcat 
+    \curl wttr\.in/"Adelaide"\?0\?A'
+
+#red=$(tput setaf 1)
+#green=$(tput setaf 2)
+#blue=$(tput setaf 6)
+#reset=$(tput sgr0)
+#export PS1='$red$USER$reset@$green$HOST:$reset~'
+#
+source $HOME/.cargo/env

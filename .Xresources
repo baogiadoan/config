@@ -65,7 +65,7 @@
 /* *.font:				    xft:DejaVuSansMono Nerd Font Mono:regular:size=9,xft:FontAwesome:size=7 */
 /* *font:				    xft:DejaVuSansMono Nerd Font Mono:regular:size=9,xft:FontAwesome:size=7 */
 /* *font_size: 9 */
-URxvt*font:				    xft:DejaVuSansMono Nerd Font Mono:regular:size=9,xft:FontAwesome:size=7
+URxvt*font:				    xft:DejaVuSansMono Nerd Font Mono:regular:size=8,xft:FontAwesome:size=7
 /* URxvt*boldFont:			xft:DejaVuSans Mono Nerd Font Mono:bold:size=8 */
 /* URxvt*italicFont:		xft:DejaVuSans Mono Nerd Font Mono:italic:size=8 */
 /* URxvt*boldItalicFont:	xft:DejaVuSans Mono Nerd Font Mono:bold italic:size=8 */
@@ -74,7 +74,7 @@ URxvt*font:				    xft:DejaVuSansMono Nerd Font Mono:regular:size=9,xft:FontAwes
 ! Xft Font Configuration
 ! ------------------------------------------------------------------------------
 
-Xft.dpi: 122
+!Xft.dpi: 100
 
 Xft.autohint: 0
 Xft.lcdfilter: lcddefault
