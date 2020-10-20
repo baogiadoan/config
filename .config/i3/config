@@ -275,7 +275,7 @@ client.urgent           $red $red $white $red $red
 #end of window title bars & borders section
 #
 # betterlockscreen
-exec no-startup-id betterlockscreen -u ~/Pictures/wallpapers/lockscreen/ #update when initating i3
+#exec no-startup-id betterlockscreen -u ~/Pictures/wallpapers/lockscreen/ #update when initating i3
 set $lock_screen ~/.config/i3/lock_screen.sh
 #exec --no-startup-id xautolock -time 5 -locker $lock_screen
 #exec --no-startup-id xss-lock --transfer-sleep-lock -- $lock_screen --nofork

@@ -26,49 +26,63 @@
     enable_statusline_mode = true
     bootstrap_after = "my_configs#after"
     filemanager = 'nerdtree'   
+    # checking tools
+    enable_neomake = false
+    enable_ale = true
+    lint_on_the_fly = true
+
+
 
 
 # enable other colorscheme
 [[layers]]
-name = 'colorscheme'
+  name = 'colorscheme'
+
+# checkers to show highlights in statusbar instead
+[[layers]]
+  name = 'checkers'
+  show_cursor_error = false
 
 # vim-fugitive layer
 [[layers]]
-name = 'VersionControl'
-git-plugin = "vim-fugitive"
+  name = 'VersionControl'
 
 # Enable autocomplete layer
 [[layers]]
-name = 'autocomplete'
-auto_completion_return_key_behavior = "complete"
-auto_completion_tab_key_behavior = "smart"
+  name = 'autocomplete'
+  auto_completion_return_key_behavior = "complete"
+  auto_completion_tab_key_behavior = "smart"
 
 [[layers]]
-name = 'shell'
-default_position = 'top'
-default_height = 30
+  name = 'shell'
+  default_position = 'top'
+  default_height = 30
 
 [[layers]]
-name = "lang#python"
+  name = "lang#python"
+  format_on_save = 1
 
 [[layers]]
-name = "tmux"
+  name = "tmux"
+
+[[layers]]
+  name = "fzf"
 
 ##################################################
 # Custom plugins
 ##################################################
 
 [[custom_plugins]]
-repo = "tpope/vim-fugitive"
-merge = false
+  repo = "tpope/vim-fugitive"
+  merge = false
 
 [[custom_plugins]]
-repo = "christoomey/vim-tmux-navigator"
-merged = false
+  repo = "christoomey/vim-tmux-navigator"
+  merged = false
 
 
 [[custom_plugins]]
-repo = "chriskempson/base16-vim"
-merged = false
+  repo = "chriskempson/base16-vim"
+  merged = false
 
 

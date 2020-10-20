@@ -55,13 +55,13 @@ font-3 = "Font Awesome 5 Brands Regular:style=Regular:pixelsize=8;1"
 
 modules-left = i3 xwindow
 modules-center = mpd date openweathermap-fullfeatured
-modules-right = pulseaudio xkeyboard powermenu
+modules-right = pulseaudio powermenu
 
 /*tray-position = right*/
 /*tray-padding = 2*/
 /*;tray-background = #0063ff*/
 
-;wm-restack = bspwm
+/*;wm-restack = bspwm*/
 ;wm-restack = i3
 
 ;override-redirect = true
@@ -629,16 +629,6 @@ exec = ~/.config/polybar/scripts/openweathermap-fullfeatured/openweathermap-full
 interval = 600
 label-font = 3
 ;click-left = curl -o wttr.in
-
-[module/notification-spacex]
-type = custom/script
-exec = ~/.config/polybar/scripts/notification-spacex/notification-spacex.sh
-interval = 600
-format = <label>
-format-prefix = " "
-format-prefix-foreground = ${colors.secondary}
-format-underline = ${colors.secondary}
-click-left = firefox https://www.spacex.com/launches/
 
 [module/system-cpu-temppercore]
 type = custom/script

@@ -181,3 +181,4 @@ alias weather='figlet "Weather" | lolcat
 #export PS1='$red$USER$reset@$green$HOST:$reset~'
 #
 source $HOME/.cargo/env
+export PATH="${PATH}:${HOME}/.local/bin/"
