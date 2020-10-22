@@ -30,9 +30,7 @@
 ;; change `org-directory'. It must be set before org loads!
 (after! org
   (setq org-directory "~/org/")
-  (setq org-agenda-files '("~/org/agenda/projects.org"
-                           "~/org/agenda/daily-work.org")
-   ) ;; set the file for the org agenda,
+  (setq org-agenda-files (directory-files-recursively "~/org/" "\\.org$")) ;; set the file for the org agenda,
   ;; could be multiple files
   ; (setq org-log-done 'time) ;; log the time after done the task
   (setq org-log-done 'note) ;; log the time and give a NOTE after done the task
@@ -42,6 +40,9 @@
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
 (setq display-line-numbers-type t)
 
+;; pretty bullets
+; (use-package org-bullets
+    ; :hook (org-mode . org-bullets-mode))
 
 ;; Here are some additional functions/macros that could help you configure Doom:
 ;;
