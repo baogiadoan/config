@@ -29,20 +29,32 @@
 ;; If you use `org' and don't want your org files in the default location below,
 ;; change `org-directory'. It must be set before org loads!
 (after! org
-  (setq org-directory "~/org/")
-  (setq org-agenda-files (directory-files-recursively "~/org/" "\\.org$")) ;; set the file for the org agenda,
+  (setq org-directory "~/ownCloud/org/")
+  (setq org-agenda-files (directory-files-recursively "~/ownCloud/org/" "\\.org$")) ;; set the file for the org agenda,
   ;; could be multiple files
   ; (setq org-log-done 'time) ;; log the time after done the task
   (setq org-log-done 'note) ;; log the time and give a NOTE after done the task
- )
 
+  ;; blog settings -- Org capture template
+  (defun create-blog-post ()
+          "Create an org file in ~/ownCloud/org/blog/posts"
+          (interactive)
+          (let ((name (read-string "Filename: ")))
+          (expand-file-name (format "%s.org" name) "~/ownCloud/org/blog/posts/")))
+  (setq org-capture-templates
+          '(("p" "Post" plain
+                  (file create-blog-post)
+                  (file "~/.doom.d/org-templates/post.orgcaptmpl"))))
+
+;; pretty bullets
+  (use-package org-bullets
+      :hook (org-mode . org-bullets-mode))
+
+ )
 ;; This determines the style of line numbers in effect. If set to `nil', line
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
 (setq display-line-numbers-type t)
 
-;; pretty bullets
-; (use-package org-bullets
-    ; :hook (org-mode . org-bullets-mode))
 
 ;; Here are some additional functions/macros that could help you configure Doom:
 ;;
