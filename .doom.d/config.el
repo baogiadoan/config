@@ -8,7 +8,10 @@
 ;; clients, file templates and snippets.
 (setq user-full-name "Bao Doan"
       user-mail-address "giabaodoan1320@gmail.com")
-
+;; my configuration here
+(setq projectile-project-search-path '("~/code/"))
+;;
+;;
 ;; Doom exposes five (optional) variables for controlling fonts in Doom. Here
 ;; are the three important ones:
 ;;
