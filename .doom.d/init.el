@@ -182,6 +182,3 @@
        :config
        ;;literate
        (default +bindings +smartparens))
-
- ;; (add-hook 'org-mode')
- ;; (add-hook 'org-mode-hook #'org-bullets-mode)

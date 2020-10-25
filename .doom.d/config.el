@@ -35,7 +35,7 @@
   (setq org-directory "~/ownCloud/org/")
   (setq org-agenda-files (directory-files-recursively "~/ownCloud/org/" "\\.org$")) ;; set the file for the org agenda,
   ;; could be multiple files
-  ; (setq org-log-done 'time) ;; log the time after done the task
+  ;; (setq org-log-done 'time) ;; log the time after done the task
   (setq org-log-done 'note) ;; log the time and give a NOTE after done the task
 
   ;; blog settings -- Org capture template
@@ -49,7 +49,7 @@
                   (file create-blog-post)
                   (file "~/.doom.d/org-templates/post.orgcaptmpl"))))
 
-;; pretty bullets
+  ;; pretty bullets
   (use-package org-bullets
       :hook (org-mode . org-bullets-mode))
 
@@ -58,7 +58,8 @@
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
 (setq display-line-numbers-type t)
 
-
+(evil-snipe-mode +1)
+(evil-snipe-override-mode +1)
 ;; Here are some additional functions/macros that could help you configure Doom:
 ;;
 ;; - `load!' for loading external *.el files relative to this one
