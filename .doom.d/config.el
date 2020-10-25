@@ -53,13 +53,15 @@
   (use-package org-bullets
       :hook (org-mode . org-bullets-mode))
 
+  (require 'org-journal)
+  (setq org-journal-dir "~/ownCloud/org/journal/")
  )
 ;; This determines the style of line numbers in effect. If set to `nil', line
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
 (setq display-line-numbers-type t)
-
 (evil-snipe-mode +1)
 (evil-snipe-override-mode +1)
+
 ;; Here are some additional functions/macros that could help you configure Doom:
 ;;
 ;; - `load!' for loading external *.el files relative to this one
@@ -76,3 +78,4 @@
 ;;
 ;; You can also try 'gd' (or 'C-c c d') to jump to their definition and see how
 ;; they are implemented.
+(load! "+bindings")
