@@ -7,7 +7,7 @@
 ;; Some functionality uses this to identify you, e.g. GPG configuration, email
 ;; clients, file templates and snippets.
 (setq user-full-name "Bao Doan"
-      user-mail-address "giabaodoan1320@gmail.com")
+      user-mail-address "bao.doan@adelaide.edu.au")
 ;; my configuration here
 (setq projectile-project-search-path '("~/code/"))
 ;;
@@ -85,7 +85,7 @@
 ; smtp
 (setq message-send-mail-function 'smtpmail-send-it
       smtpmail-starttls-credentials
-      '(("mail.example.com" 587 nil nil))
+      '(("smtp.office365.com" 587 nil nil))
       smtpmail-default-smtp-server "smtp.office365.com"
       smtpmail-smtp-server "smtp.office365.com"
       smtpmail-smtp-service 587
