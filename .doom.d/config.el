@@ -86,54 +86,43 @@
 (setq message-send-mail-function 'smtpmail-send-it
       smtpmail-starttls-credentials
       '(("mail.example.com" 587 nil nil))
-      smtpmail-default-smtp-server "mail.example.com"
-      smtpmail-smtp-server "mail.example.com"
+      smtpmail-default-smtp-server "smtp.office365.com"
+      smtpmail-smtp-server "smtp.office365.com"
       smtpmail-smtp-service 587
       smtpmail-debug-info t)
 (require 'mu4e)
 ;; use mu4e for e-mail in emacs
 (setq mail-user-agent 'mu4e-user-agent)
-(setq mu4e-maildir "/home/user/Maildir")
+(setq mu4e-maildir "/home/baodoan/Maildir")
 
-;; default
-(setq mu4e-contexts
-    `( ,(make-mu4e-context
-        :name "gmail"
-        :enter-func (lambda ()
-                        (mu4e-message "Entering gmail context")
-                        ;; Quicky jump to/move a mail to different folders
-                        (setq mu4e-maildir-shortcuts  '( ("/gmail/INBOX"   . ?i)
-                                                         ("/gmail/sent"    . ?s)
-                                                         ("/gmail/trash"   . ?t)
-                                                         ("/gmail/drafts"  . ?d)
-                                                         ("/gmail/archive" . ?r))))
-        :leave-func (lambda ()
-                        (mu4e-message "Leaving gmail context"))
-        :match-func (lambda (msg)
-                        (when msg
-                            ;; Clemson has two valid emails for each student
-                            (or (mu4e-message-contact-field-matches msg
-                                    :to "adday@clemson.edu")
-                                (mu4e-message-contact-field-matches msg
-                                    :to "adday@g.clemson.edu"))))
+(setq mu4e-drafts-folder "/uni-mail/Drafts")
+(setq mu4e-sent-folder   "/uni-mail/Sent Items")
+(setq mu4e-trash-folder  "/uni-mail/Trash")
+(setq message-signature-file "~/.doom.d/.signature") ; put your signature in this file
 
-        :vars '( ( user-mail-address      . "giabaodoan1320@gmail.com"  )
-                 ( user-full-name         . "Bao Doan" )
-                 ( mu4e-drafts-folder     . "/gmail/drafts")
-                 ( mu4e-sent-folder       . "/gmail/sent")
-                 ( mu4e-trash-folder      . "/gmail/trash")
-                 ( mu4e-refile-folder     . "/gmail/archive" )
-                 ( mu4e-compose-signature . (concat "Bao Doan"))))))
+; get mail
+(setq mu4e-get-mail-command "mbsync -a"
+      mu4e-html2text-command "w3m -T text/html"
+      mu4e-update-interval 120
+      mu4e-headers-auto-update t
+      mu4e-compose-signature-auto-include nil)
 
+(setq mu4e-maildir-shortcuts
+      '( ("/uni-mail/INBOX"               . ?i)
+         ("/uni-mail/Sent Items"   . ?s)
+         ("/uni-mail/Trash"       . ?t)
+         ("/uni-mail/Drafts"    . ?d)))
 
-;; don't save message to Sent Messages, Gmail/IMAP takes care of this
+;; show images
+(setq mu4e-view-show-images t)
+;; use imagemagick, if available
+(when (fboundp 'imagemagick-register-types)
+  (imagemagick-register-types))
+;; don't save message to Sent Messages, IMAP takes care of this
 (setq mu4e-sent-messages-behavior 'delete)
-
-;; allow for updating mail using 'U' in the main view:
-(setq mu4e-get-mail-command "mbsync -a")
-
-(setq message-send-mail-function 'message-send-mail-with-sendmail)
-(setq sendmail-program "/usr/bin/msmtp")
-;; tell msmtp to choose the SMTP server by the 'from' field in the outgoing email
-(setq message-sendmail-extra-arguments '("--read-envelope-from"))
-(setq message-sendmail-f-is-evil 't)
+;; spell check
+(add-hook 'mu4e-compose-mode-hook
+        (defun my-do-compose-stuff ()
+           "My settings for message composition."
+           (set-fill-column 72)
+           (flyspell-mode)))
