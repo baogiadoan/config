@@ -30,7 +30,9 @@ exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock --nofork
 # NetworkManager is the most popular way to manage wireless networks on Linux,
 # and nm-applet is a desktop environment-independent system tray GUI for it.
 exec --no-startup-id nm-applet
-exec --no-startup-id stretchly
+exec --no-startup-id ~/.AppImage/Stretchly-1.2.0.AppImage
+exec --no-startup-id owncloud
+exec --no-startup-id ~/pcloud-drive/pcloud
 
 # Use pactl to adjust volume in PulseAudio.
 set $refresh_i3status killall -SIGUSR1 i3status
@@ -350,6 +352,5 @@ bindsym $mod+m move workspace to output left
 #exec --no-startup-id "setxkbmap -layout us,vn"
 #exec "setxkbmap -option 'grp:Alt_space_toogle'"
 #start pcloud
-exec ~/pcloud-drive/pcloud
 
 #exec --no-startup-id "setxkbmap -model pc105 -layout en,vn -option grp:alt_shift_toggle"

@@ -9,6 +9,9 @@
 ;; To install SOME-PACKAGE from MELPA, ELPA or emacsmirror:
 ;(package! some-package)
 (package! org-bullets)
+(package! org-journal)
+(package! evil-snipe)
+(package! avy)
 (package! mu4e)
 
 ;; To install a package directly from a remote git repo, you must specify a
