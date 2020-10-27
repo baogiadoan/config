@@ -16,8 +16,8 @@
    :n "n" #'org-journal-next-entry
    :n "O" #'org-journal-new-date-entry))
 ;; binding mu4e -- email client
-(map! :leader
-      :desc "Open mu4e" "m" #'mu4e)
+;; (map! :leader
+;;       :desc "Open mu4e" "m" #'mu4e)
 ;; Local leader (<SPC m>) bindings for org-journal in calendar-mode
 ;; I was running out of bindings, and these are used less frequently
 ;; so it is convenient to have them under the local leader prefix
