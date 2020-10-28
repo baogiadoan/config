@@ -81,10 +81,8 @@
             (alltodo "" ((org-agenda-overriding-header "")
                          (org-super-agenda-groups
                           '((:log t)
-                            (:name "To refile"
-                                   :file-path "refile\\.org")
-                            (:name "Next to do"
-                                   :todo "NEXT"
+                            (:name "Projects"
+                                   :todo "PROJ"
                                    :order 1)
                             (:name "Important"
                                    :priority "A"
@@ -144,15 +142,12 @@
       smtpmail-smtp-service 587
       smtpmail-debug-info t)
 ;; only my Macbook requires this
-(add-to-list 'load-path "/usr/local/share/emacs/site-lisp/mu/mu4e")
+;; (add-to-list 'load-path "/usr/local/share/emacs/site-lisp/mu/mu4e")
 (require 'mu4e)
 ;; use mu4e for e-mail in emacs
 (setq mail-user-agent 'mu4e-user-agent)
-(setq mu4e-maildir "/home/baodoan/Maildir")
+(setq mu4e-maildir "/home/user/Maildir")
 
-(setq mu4e-drafts-folder "/uni-mail/Drafts")
-(setq mu4e-sent-folder   "/uni-mail/Sent Items")
-(setq mu4e-trash-folder  "/uni-mail/Trash")
 (setq message-signature-file "~/.doom.d/.signature") ; put your signature in this file
 
 ; get mail
@@ -161,12 +156,6 @@
       mu4e-update-interval 120
       mu4e-headers-auto-update t
       mu4e-compose-signature-auto-include nil)
-
-(setq mu4e-maildir-shortcuts
-      '( ("/uni-mail/INBOX"               . ?i)
-         ("/uni-mail/Sent Items"   . ?s)
-         ("/uni-mail/Trash"       . ?t)
-         ("/uni-mail/Drafts"    . ?d)))
 
 ;; show images
 (setq mu4e-view-show-images t)
@@ -181,3 +170,98 @@
            "My settings for message composition."
            (set-fill-column 72)
            (flyspell-mode)))
+;; <tab> to navigate to links, <RET> to open them in browser
+(add-hook 'mu4e-view-mode-hook
+  (lambda()
+;; try to emulate some of the eww key-bindings
+(local-set-key (kbd "<RET>") 'mu4e~view-browse-url-from-binding)
+(local-set-key (kbd "<tab>") 'shr-next-link)
+(local-set-key (kbd "<backtab>") 'shr-previous-link)))
+;; from https://www.reddit.com/r/emacs/comments/bfsck6/mu4e_for_dummies/elgoumx
+(add-hook 'mu4e-headers-mode-hook
+      (defun my/mu4e-change-headers ()
+	(interactive)
+	(setq mu4e-headers-fields
+	      `((:human-date . 25) ;; alternatively, use :date
+		(:flags . 6)
+		(:from . 22)
+		(:thread-subject . ,(- (window-body-width) 70)) ;; alternatively, use :subject
+		(:size . 7)))))
+
+(require 'org-mu4e)
+;; convert org mode to HTML automatically
+(setq org-mu4e-convert-to-html t)
+;; don't ask when quitting
+(setq mu4e-confirm-quit nil)
+;;set up queue for offline email
+;;use mu mkdir  ~/Maildir/acc/queue to set up first
+(setq smtpmail-queue-mail nil)  ;; start in normal mode
+;; mu4e-context
+(setq mu4e-context-policy 'pick-first)
+(setq mu4e-compose-context-policy 'always-ask)
+(setq mu4e-contexts
+  (list
+   (make-mu4e-context
+    :name "work" ;;for uni-mail
+    :enter-func (lambda () (mu4e-message "Entering context work"))
+    :leave-func (lambda () (mu4e-message "Leaving context work"))
+    :match-func (lambda (msg)
+		  (when msg
+		(mu4e-message-contact-field-matches
+		 msg '(:from :to :cc :bcc) "bao.doan@adelaide.edu.au")))
+    :vars '((user-mail-address . "bao.doan@adelaide.edu.au")
+	    (user-full-name . "Bao Doan")
+	    (mu4e-sent-folder . "/uni-mail/Sent Items")
+	    (mu4e-drafts-folder . "/uni-mail/Drafts")
+	    (mu4e-trash-folder . "/uni-mail/Deleted Items")
+	    (mu4e-compose-signature . (concat "Formal Signature\n" "Emacs 25, org-mode 9, mu4e 1.0\n"))
+	    (mu4e-compose-format-flowed . t)
+	    (smtpmail-queue-dir . "~/Maildir/uni-mail/queue/cur")
+	    (message-send-mail-function . smtpmail-send-it)
+	    (smtpmail-smtp-user . "uni-mail")
+	    (smtpmail-starttls-credentials . (("smtp.office365.com" 587 nil nil)))
+	    (smtpmail-auth-credentials . (expand-file-name "~/.authinfo.gpg"))
+	    (smtpmail-default-smtp-server . "smtp.office365.com")
+	    (smtpmail-smtp-server . "smtp.office365.com")
+	    (smtpmail-smtp-service . 587)
+	    (smtpmail-debug-info . t)
+	    (smtpmail-debug-verbose . t)
+	    (mu4e-maildir-shortcuts . ( ("/uni-mail/INBOX"            . ?i)
+					("/uni-mail/Sent Items" . ?s)
+					("/uni-mail/Deleted Items"       . ?t)
+					("/uni-mail/Drafts"    . ?d)
+					))))
+   (make-mu4e-context
+    :name "personal" ;;for gmail
+    :enter-func (lambda () (mu4e-message "Entering context personal"))
+    :leave-func (lambda () (mu4e-message "Leaving context personal"))
+    :match-func (lambda (msg)
+		  (when msg
+		(mu4e-message-contact-field-matches
+		 msg '(:from :to :cc :bcc) "giabaodoan1320@gmail.com")))
+    :vars '((user-mail-address . "giabaodoan1320@gmail.com")
+	    (user-full-name . "Bao Gia Doan")
+	    (mu4e-sent-folder . "/gmail/[gmail].Sent Mail")
+	    (mu4e-drafts-folder . "/gmail/[gmail].drafts")
+	    (mu4e-trash-folder . "/gmail/[gmail].trash")
+	    (mu4e-compose-signature . (concat "Informal Signature\n" "Emacs is awesome!\n"))
+	    (mu4e-compose-format-flowed . t)
+	    (smtpmail-queue-dir . "~/Maildir/gmail/queue/cur")
+	    (message-send-mail-function . smtpmail-send-it)
+	    (smtpmail-smtp-user . "acc2")
+	    (smtpmail-starttls-credentials . (("smtp.gmail.com" 587 nil nil)))
+	    (smtpmail-auth-credentials . (expand-file-name "~/.authinfo.gpg"))
+	    (smtpmail-default-smtp-server . "smtp.gmail.com")
+	    (smtpmail-smtp-server . "smtp.gmail.com")
+	    (smtpmail-smtp-service . 587)
+	    (smtpmail-debug-info . t)
+	    (smtpmail-debug-verbose . t)
+	    (mu4e-maildir-shortcuts . ( ("/gmail/INBOX"            . ?i)
+					("/gmail/[gmail].Sent Mail" . ?s)
+					("/gmail/trash"     . ?t)
+					("/gmail/[gmail].All Mail"  . ?a)
+					("/gmail/[gmail].Starred"   . ?r)
+					("/gmail/drafts"    . ?d)
+					))))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
