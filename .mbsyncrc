@@ -86,7 +86,36 @@ SubFolders Verbatim
 Channel gmail-inbox
 Master :gmail-remote:
 Slave :gmail-local:
-Patterns "INBOX" "*"
+Patterns "INBOX"
 Create Both
 Expunge Both
-SyncState *
+# SyncState *
+
+Channel sync-gmail-sent
+Master :gmail-remote:"[Gmail]/Sent Mail"
+Slave :gmail-local:sent
+Create Slave
+
+Channel sync-gmail-important
+Master :gmail-remote:"[Gmail]/Important"
+Slave :gmail-local:important
+Create Slave
+
+Channel sync-gmail-starred
+Master :gmail-remote:"[Gmail]/Starred"
+Slave :gmail-local:drafts
+Create Slave
+
+Channel sync-gmail-trash
+Master :gmail-remote:"[Gmail]/Bin"
+Slave :gmail-local:trash
+Create Slave
+
+# Get all the channels together into a group
+Group gmail
+Channel gmail-inbox
+Channel sync-gmail-sent
+Channel sync-gmail-important
+Channel sync-gmail-starred
+Channel sync-gmail-trash
+

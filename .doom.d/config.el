@@ -38,6 +38,8 @@
   ;; (setq org-log-done 'time) ;; log the time after done the task
   (setq org-log-done 'note) ;; log the time and give a NOTE after done the task
 
+  ;; org-journal integrate to org-agenda
+  (setq org-journal-enable-agenda-integration t)
   ;; blog settings -- Org capture template
   (defun create-blog-post ()
           "Create an org file in ~/ownCloud/org/blog/posts"
@@ -83,12 +85,15 @@
                           '((:log t)
                             (:name "Projects"
                                    :todo "PROJ"
-                                   :order 1)
+                                   :order 2)
                             (:name "Important"
                                    :priority "A"
-                                   :order 6)
+                                   :order 3)
+                            (:name "Other Priorities"
+                                   :priority< "A"
+                                   :order 7)
                             (:name "Today's tasks"
-                                   :file-path "journal/")
+                                   :file-path "journal")
                             (:name "Due Today"
                                    :deadline today
                                    :order 2)
@@ -99,8 +104,8 @@
                                    :deadline past
                                    :order 7)
                             (:name "Meetings"
-                                   :and (:todo "MEET" :scheduled future)
-                                   :order 10)
+                                   :and (:tag "MEET")
+                                   :order 3)
                             (:discard (:not (:todo "TODO")))))))))))
   :config
   (org-super-agenda-mode))
@@ -283,3 +288,4 @@
      (setq org-map-continue-from (outline-previous-heading)))
    "/CANCELLED" 'file)
 )
+
