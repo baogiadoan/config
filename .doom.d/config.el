@@ -28,7 +28,16 @@
 ;; There are two ways to load a theme. Both assume the theme is installed and
 ;; available. You can either set `doom-theme' or manually load a theme with the
 ;; `load-theme' function. This is the default:
-(setq doom-theme 'doom-one)
+;;
+;;
+(defun reload-theme (frame)
+  (with-selected-frame frame
+    (if (display-graphic-p)
+        (load-theme 'doom-one t)
+      (load-theme 'nord t))))
+
+(add-hook 'after-make-frame-functions #'reload-theme)
+;; (setq doom-theme 'doom-one)
 ;; If you use `org' and don't want your org files in the default location below,
 ;; change `org-directory'. It must be set before org loads!
 (after! org
@@ -56,11 +65,12 @@
       :hook (org-mode . org-bullets-mode))
 
   (require 'org-journal)
-  (setq org-journal-dir "~/ownCloud/org/journal/")
+  (setq org-journal-dir "~/ownCloud/org/journal/2020/")
 
 
   ;;org-super-agenda
   ;;
+  (require 'org-super-agenda)
   (use-package org-super-agenda
   :after org-agenda
   :init
@@ -79,34 +89,30 @@
                          '((:name "Today"
                                   :time-grid t
                                   :date today
-                                  :order 1)))))
+                                  :order 0)))))
             (alltodo "" ((org-agenda-overriding-header "")
                          (org-super-agenda-groups
                           '((:log t)
-                            (:name "Projects"
-                                   :todo "PROJ"
-                                   :order 2)
                             (:name "Important"
-                                   :priority "A"
-                                   :order 3)
+                                   :priority "A")
                             (:name "Other Priorities"
-                                   :priority< "A"
-                                   :order 7)
+                                   :priority< "A")
+                            (:name "BIG 3"
+                                   :tag "BIG")
                             (:name "Today's tasks"
                                    :file-path "journal")
                             (:name "Due Today"
-                                   :deadline today
-                                   :order 2)
+                                   :deadline today)
                             (:name "Scheduled Soon"
-                                   :scheduled future
-                                   :order 8)
-                            (:name "Overdue"
-                                   :deadline past
-                                   :order 7)
+                                   :scheduled future)
+                            (:name "Due Soon"
+                                   :deadline future)
                             (:name "Meetings"
-                                   :and (:tag "MEET")
-                                   :order 3)
-                            (:discard (:not (:todo "TODO")))))))))))
+                                   :tag "MEET")
+                            (:name "Overdue"
+                                   :deadline past)
+                            ;; (:discard (:not (:todo "TODO")))))))))))
+                            ))))))))
   :config
   (org-super-agenda-mode))
   ;; workaround for conflict keybinding at org-super-agenda vs evil-mode
@@ -136,16 +142,6 @@
 ;; they are implemented.
 (load! "+bindings")
 
-;; mu4e set-ups
-(require 'smtpmail)
-; smtp
-(setq message-send-mail-function 'smtpmail-send-it
-      smtpmail-starttls-credentials
-      '(("smtp.office365.com" 587 nil nil))
-      smtpmail-default-smtp-server "smtp.office365.com"
-      smtpmail-smtp-server "smtp.office365.com"
-      smtpmail-smtp-service 587
-      smtpmail-debug-info t)
 ;; only my Macbook requires this
 ;; (add-to-list 'load-path "/usr/local/share/emacs/site-lisp/mu/mu4e")
 (require 'mu4e)
@@ -193,6 +189,22 @@
 		(:thread-subject . ,(- (window-body-width) 70)) ;; alternatively, use :subject
 		(:size . 7)))))
 
+
+(require 'smtpmail)
+;;rename files when moving
+;;NEEDED FOR MBSYNC
+(setq mu4e-change-filenames-when-moving t)
+;;set up queue for offline email
+;;use mu mkdir  ~/Maildir/acc/queue to set up first
+(setq smtpmail-queue-mail nil)  ;; start in normal mode
+;;from the info manual
+(setq mu4e-attachment-dir  "~/Downloads")
+(setq message-kill-buffer-on-exit t)
+(setq mu4e-compose-dont-reply-to-self t)
+
+
+
+
 (require 'org-mu4e)
 ;; convert org mode to HTML automatically
 (setq org-mu4e-convert-to-html t)
@@ -223,11 +235,13 @@
 	    (mu4e-compose-format-flowed . t)
 	    (smtpmail-queue-dir . "~/Maildir/uni-mail/queue/cur")
 	    (message-send-mail-function . smtpmail-send-it)
-	    (smtpmail-smtp-user . "uni-mail")
-	    (smtpmail-starttls-credentials . (("smtp.office365.com" 587 nil nil)))
-	    (smtpmail-auth-credentials . (expand-file-name "~/.authinfo.gpg"))
+	    ;; (smtpmail-starttls-credentials . (("smtp.office365.com" 587 nil nil)))
+	    ;; (smtpmail-auth-credentials . (expand-file-name "~/.authinfo.gpg"))
+            (auth-sources . (list "~/.authinfo.gpg"))
 	    (smtpmail-default-smtp-server . "smtp.office365.com")
-	    (smtpmail-smtp-server . "smtp.office365.com")
+            (smtpmail-smtp-server . "smtp.office365.com")
+	    (smtpmail-smtp-user . "a1761351@adelaide.edu.au")
+            (smtpmail-stream-type . starttls)
 	    (smtpmail-smtp-service . 587)
 	    (smtpmail-debug-info . t)
 	    (smtpmail-debug-verbose . t)
@@ -253,20 +267,24 @@
 	    (mu4e-compose-format-flowed . t)
 	    (smtpmail-queue-dir . "~/Maildir/gmail/queue/cur")
 	    (message-send-mail-function . smtpmail-send-it)
-	    (smtpmail-smtp-user . "acc2")
-	    (smtpmail-starttls-credentials . (("smtp.gmail.com" 587 nil nil)))
-	    (smtpmail-auth-credentials . (expand-file-name "~/.authinfo.gpg"))
+	    (smtpmail-smtp-user . "giabaodoan1320@gmail.com")
+	    ;; (smtpmail-starttls-credentials . (("smtp.gmail.com" 587 nil nil)))
+	    ;; (smtpmail-auth-credentials . (expand-file-name "~/.authinfo.gpg"))
 	    (smtpmail-default-smtp-server . "smtp.gmail.com")
-	    (smtpmail-smtp-server . "smtp.gmail.com")
+            (smtpmail-smtp-server . "smtp.gmail.com")
+	    (smtpmail-smtp-user . "giabaodoan1320@gmail.com")
+            (auth-sources . (list "~/.authinfo.gpg"))
+            (smtpmail-stream-type . starttls)
 	    (smtpmail-smtp-service . 587)
 	    (smtpmail-debug-info . t)
 	    (smtpmail-debug-verbose . t)
 	    (mu4e-maildir-shortcuts . ( ("/gmail/INBOX"            . ?i)
-					("/gmail/[gmail].Sent Mail" . ?s)
-					("/gmail/trash"     . ?t)
-					("/gmail/[gmail].All Mail"  . ?a)
-					("/gmail/[gmail].Starred"   . ?r)
-					("/gmail/drafts"    . ?d)
+					("/gmail/[Gmail]/Sent Mail" . ?s)
+					("/gmail/[Gmail]/Important" . ?t)
+					("/gmail/[Gmail]/Bin"     . ?b)
+					("/gmail/[Gmail]/All Mail"  . ?a)
+					("/gmail/[Gmail]/Starred"   . ?r)
+					("/gmail/[Gmail]/Drafts"    . ?d)
 					))))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -280,7 +298,7 @@
   (org-map-entries
    (lambda ()
      (org-archive-subtree)
-     (setq org-map-continue-from (outline-previous-heading)))
+     (Setq org-map-continue-from (outline-previous-heading)))
    "/DONE" 'file)
   (org-map-entries
    (lambda ()
@@ -289,3 +307,20 @@
    "/CANCELLED" 'file)
 )
 
+;; mu4e-alert
+(mu4e-alert-set-default-style 'libnotify)
+(add-hook 'after-init-hook #'mu4e-alert-enable-notifications)
+(add-hook 'after-init-hook #'mu4e-alert-enable-mode-line-display)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; org-download
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(require 'org-download)
+;; Drag-and-drop to `dired`
+(add-hook 'dired-mode-hook 'org-download-enable)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(require 'epa)
+(epa-file-enable)

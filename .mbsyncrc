@@ -89,27 +89,35 @@ Slave :gmail-local:
 Patterns "INBOX"
 Create Both
 Expunge Both
-# SyncState *
+SyncState *
 
 Channel sync-gmail-sent
 Master :gmail-remote:"[Gmail]/Sent Mail"
 Slave :gmail-local:sent
-Create Slave
+Create Both
+Expunge Both
+SyncState *
 
 Channel sync-gmail-important
 Master :gmail-remote:"[Gmail]/Important"
 Slave :gmail-local:important
-Create Slave
+Create Both
+Expunge Both
+SyncState *
 
 Channel sync-gmail-starred
 Master :gmail-remote:"[Gmail]/Starred"
-Slave :gmail-local:drafts
-Create Slave
+Slave :gmail-local:starred
+Create Both
+Expunge Both
+SyncState *
 
 Channel sync-gmail-trash
 Master :gmail-remote:"[Gmail]/Bin"
 Slave :gmail-local:trash
-Create Slave
+Create Both
+Expunge Both
+SyncState *
 
 # Get all the channels together into a group
 Group gmail

@@ -191,16 +191,16 @@ bindsym $mod+r mode "resize"
 
 
 # bao: config xrandr to set my monitors
-#exec --no-startup-id "xrandr --output HDMI-0 --primary --right-of DP-4"
+# exec --no-startup-id "xrandr --output HDMI-0 --primary --right-of DP-0"
 
 
-exec --no-startup-id $HOME/.screenlayout/newconfig.sh 
+exec --no-startup-id $HOME/.screenlayout/newconfig.sh
 
 # lock the screen with i3 
 #bindsym $mod+shift+x exec ~/i3lock-color/lock.sh
 
 # activate Variety
-exec variety
+exec --no-startup-id variety
 
 # flameshot
 bindsym Control+shift+i exec flameshot gui
@@ -306,7 +306,9 @@ gaps outer 15
 # on|no_gaps (on=always activate and no_gaps=only activate if the gap size to the edge of the screen is 0)
 smart_borders on
 
-# Press $mod+Shift+g to enter the gap mode. Choose o or i for modifying outer/inner gaps. Press one of + / - (in-/decrement for current workspace) or 0 (remove gaps for current workspace). If you also press Shift with these keys, the change will be global for all workspaces.
+# Press $mod+Shift+g to enter the gap mode. Choose o or i for modifying outer/inner gaps.
+# Press one of + / - (in-/decrement for current workspace) or 0 (remove gaps for current workspace). 
+# If you also press Shift with these keys, the change will be global for all workspaces.
 set $mode_gaps Gaps: (o) outer, (i) inner
 set $mode_gaps_outer Outer Gaps: +|-|0 (local), Shift + +|-|0 (global)
 set $mode_gaps_inner Inner Gaps: +|-|0 (local), Shift + +|-|0 (global)
