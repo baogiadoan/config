@@ -161,6 +161,7 @@ alias tn="tmux new -s"
 alias config='/usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
 alias p="python"
 alias lc="colorls"
+alias z="zathura"
 
 test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
 
