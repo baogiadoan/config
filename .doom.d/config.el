@@ -148,21 +148,20 @@
 ;; use mu4e for e-mail in emacs
 (setq mail-user-agent 'mu4e-user-agent)
 (setq mu4e-maildir "/home/user/Maildir")
-
 (setq message-signature-file "~/.doom.d/.signature") ; put your signature in this file
+;; show images
+(setq mu4e-view-show-images t)
+;; use imagemagick, if available
+(when (fboundp 'imagemagick-register-types)
+  (imagemagick-register-types))
 
 ; get mail
 (setq mu4e-get-mail-command "mbsync -a"
       mu4e-html2text-command "w3m -T text/html"
       mu4e-update-interval 120
       mu4e-headers-auto-update t
-      mu4e-compose-signature-auto-include nil)
+      mu4e-compose-signature-auto-include t)
 
-;; show images
-(setq mu4e-view-show-images t)
-;; use imagemagick, if available
-(when (fboundp 'imagemagick-register-types)
-  (imagemagick-register-types))
 ;; don't save message to Sent Messages, IMAP takes care of this
 (setq mu4e-sent-messages-behavior 'delete)
 ;; spell check
@@ -324,3 +323,23 @@
 
 (require 'epa)
 (epa-file-enable)
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; conda
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(require 'conda)
+;; if you want interactive shell support, include:
+(conda-env-initialize-interactive-shells)
+;; if you want eshell support, include:
+(conda-env-initialize-eshell)
+;; if you want auto-activation (see below for details), include:
+(conda-env-autoactivate-mode t)
+(custom-set-variables
+ '(conda-anaconda-home "/home/user/anaconda3/"))
+(setq
+  conda-env-home-directory (expand-file-name "/home/user/anaconda3/") ;; as in previous example; not required
+  conda-env-subdirectory "envs")
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

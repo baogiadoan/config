@@ -15,6 +15,7 @@
 (package! mu4e)
 (package! mu4e-alert)
 (package! org-super-agenda)
+(package! conda)
 
 
 ;; To install a package directly from a remote git repo, you must specify a
