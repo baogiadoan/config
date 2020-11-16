@@ -34,9 +34,22 @@
   (with-selected-frame frame
     (if (display-graphic-p)
         (load-theme 'doom-one t)
-      (load-theme 'nord t))))
+        (load-theme 'nord t))))
 
-(add-hook 'after-make-frame-functions #'reload-theme)
+;; (add-hook 'after-make-frame-functions #'reload-theme)
+
+
+(require 'doom-themes)
+  (setq doom-theme 'doom-dracula)
+  (setq doom-one-brighter-comments nil)
+  (setq doom-one-comment-bg nil)
+
+;; change the color of the comments to cyan
+;; (custom-set-faces
+;;  `(font-lock-comment-face ((t (:foreground ,(doom-lighten 'cyan .5)))))
+;;  `(font-lock-doc-face     ((t (:foreground ,(doom-lighten 'cyan .25))))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; (setq doom-theme 'doom-one)
 ;; If you use `org' and don't want your org files in the default location below,
 ;; change `org-directory'. It must be set before org loads!
@@ -118,6 +131,7 @@
   ;; workaround for conflict keybinding at org-super-agenda vs evil-mode
   (setq org-super-agenda-header-map (make-sparse-keymap))
  )
+
 ;; This determines the style of line numbers in effect. If set to `nil', line
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
 (setq display-line-numbers-type t)
@@ -151,6 +165,9 @@
 (setq message-signature-file "~/.doom.d/.signature") ; put your signature in this file
 ;; show images
 (setq mu4e-view-show-images t)
+;; rich-text message
+(setq mu4e-view-prefer-html t)
+;;
 ;; use imagemagick, if available
 (when (fboundp 'imagemagick-register-types)
   (imagemagick-register-types))
@@ -343,3 +360,4 @@
   conda-env-home-directory (expand-file-name "/home/user/anaconda3/") ;; as in previous example; not required
   conda-env-subdirectory "envs")
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+

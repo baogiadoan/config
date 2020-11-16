@@ -1,5 +1,13 @@
 ;;; bindings.el -*- lexical-binding: t; -*-
 
+(map!
+ "C-h"  #'evil-window-left
+ "C-l"  #'evil-window-right
+ "C-j"  #'evil-window-down
+ "C-k"  #'evil-window-up
+ )
+
+
 (map! :leader
       (:prefix ("j" . "journal") ;; org-journal bindings
         :desc "Create new journal entry" "j" #'org-journal-new-entry
@@ -33,5 +41,12 @@
 (define-key evil-normal-state-map (kbd "C-h") 'evil-window-left)
 (define-key evil-normal-state-map (kbd "C-j") 'evil-window-down)
 (define-key evil-normal-state-map (kbd "C-k") 'evil-window-up)
+
+
+;; projectile mode
+(define-key evil-window-map (kbd "C-l") 'evil-window-right)
+(define-key evil-window-map (kbd "C-h") 'evil-window-left)
+(define-key evil-window-map (kbd "C-j") 'evil-window-down)
+(define-key evil-window-map (kbd "C-k") 'evil-window-up)
 
 ;; yay, it worked
