@@ -22,8 +22,8 @@
 ;;
 ;; They all accept either a font-spec, font string ("Input Mono-12"), or xlfd
 ;; font string. You generally only need these two:
-;; (setq doom-font (font-spec :family "monospace" :size 12 :weight 'semi-light)
-;;       doom-variable-pitch-font (font-spec :family "sans" :size 13))
+(setq doom-font (font-spec :family "monospace" :size 12 :weight 'semi-light)
+      doom-variable-pitch-font (font-spec :family "sans" :size 13))
 
 ;; There are two ways to load a theme. Both assume the theme is installed and
 ;; available. You can either set `doom-theme' or manually load a theme with the
@@ -41,7 +41,8 @@
 
 (require 'doom-themes)
   (setq doom-theme 'doom-dracula)
-  (setq doom-one-brighter-comments nil)
+  ;; (setq doom-theme 'doom-one-light)
+  (setq doom-one-brighter-comments t)
   (setq doom-one-comment-bg nil)
 
 ;; change the color of the comments to cyan
@@ -158,15 +159,34 @@
 
 ;; only my Macbook requires this
 ;; (add-to-list 'load-path "/usr/local/share/emacs/site-lisp/mu/mu4e")
+;; this is for my PC at work
+(add-to-list 'load-path "/usr/local/share/emacs/site-lisp/mu4e/")
 (require 'mu4e)
 ;; use mu4e for e-mail in emacs
 (setq mail-user-agent 'mu4e-user-agent)
 (setq mu4e-maildir "/home/user/Maildir")
-(setq message-signature-file "~/.doom.d/.signature") ; put your signature in this file
+;; (setq message-signature-file "~/.doom.d/.signature") ; put your signature in this file
 ;; show images
 (setq mu4e-view-show-images t)
 ;; rich-text message
 (setq mu4e-view-prefer-html t)
+
+(defun my-mu4e-html2text (msg)
+  "My html2text function; shows short message inline, show
+long messages in some external browser (see `browse-url-generic-program')."
+  (let ((html (or (mu4e-message-field msg :body-html) "")))
+    (if (> (length html) 20000)
+      (progn
+	(mu4e-action-view-in-browser msg)
+	"[Viewing message in external browser]")
+      (mu4e-shr2text msg))))
+
+(setq mu4e-html2text-command 'my-mu4e-html2text)
+
+;; if it's complicated enough, we will open the email in browser
+(add-to-list 'mu4e-view-actions
+                '("ViewInBrowser" . mu4e-action-view-in-browser) t)
+
 ;;
 ;; use imagemagick, if available
 (when (fboundp 'imagemagick-register-types)
@@ -204,7 +224,6 @@
 		(:from . 22)
 		(:thread-subject . ,(- (window-body-width) 70)) ;; alternatively, use :subject
 		(:size . 7)))))
-
 
 (require 'smtpmail)
 ;;rename files when moving
@@ -247,7 +266,7 @@
 	    (mu4e-sent-folder . "/uni-mail/Sent Items")
 	    (mu4e-drafts-folder . "/uni-mail/Drafts")
 	    (mu4e-trash-folder . "/uni-mail/Deleted Items")
-	    (mu4e-compose-signature . (concat "Formal Signature\n" "Emacs 25, org-mode 9, mu4e 1.0\n"))
+	    (mu4e-compose-signature . (concat "Best Regards,\n" "Bao Doan\n"))
 	    (mu4e-compose-format-flowed . t)
 	    (smtpmail-queue-dir . "~/Maildir/uni-mail/queue/cur")
 	    (message-send-mail-function . smtpmail-send-it)
@@ -279,7 +298,7 @@
 	    (mu4e-sent-folder . "/gmail/[gmail].Sent Mail")
 	    (mu4e-drafts-folder . "/gmail/[gmail].drafts")
 	    (mu4e-trash-folder . "/gmail/[gmail].trash")
-	    (mu4e-compose-signature . (concat "Informal Signature\n" "Emacs is awesome!\n"))
+	    (mu4e-compose-signature . (concat "Best Regards,\n" "Bao Doan\n"))
 	    (mu4e-compose-format-flowed . t)
 	    (smtpmail-queue-dir . "~/Maildir/gmail/queue/cur")
 	    (message-send-mail-function . smtpmail-send-it)

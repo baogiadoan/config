@@ -4,20 +4,18 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(ansi-color-names-vector
-   ["#272C36" "#BF616A" "#A3BE8C" "#EBCB8B" "#81A1C1" "#B48EAD" "#88C0D0" "#ECEFF4"])
+   ["#282a36" "#BF616A" "#A3BE8C" "#EBCB8B" "#81A1C1" "#B48EAD" "#88C0D0" "#ECEFF4"])
  '(conda-anaconda-home "/home/user/anaconda3/")
  '(custom-safe-themes
-   (quote
-    ("e6ff132edb1bfa0645e2ba032c44ce94a3bd3c15e3929cdf6c049802cf059a2a" "2f1518e906a8b60fac943d02ad415f1d8b3933a5a7f75e307e6e9a26ef5bf570" "bf387180109d222aee6bb089db48ed38403a1e330c9ec69fe1f52460a8936b66" "990e24b406787568c592db2b853aa65ecc2dcd08146c0d22293259d400174e37" default)))
+   '("e6ff132edb1bfa0645e2ba032c44ce94a3bd3c15e3929cdf6c049802cf059a2a" "2f1518e906a8b60fac943d02ad415f1d8b3933a5a7f75e307e6e9a26ef5bf570" "bf387180109d222aee6bb089db48ed38403a1e330c9ec69fe1f52460a8936b66" "990e24b406787568c592db2b853aa65ecc2dcd08146c0d22293259d400174e37" default))
  '(fci-rule-color "#4C566A")
  '(jdee-db-active-breakpoint-face-colors (cons "#191C25" "#81A1C1"))
  '(jdee-db-requested-breakpoint-face-colors (cons "#191C25" "#A3BE8C"))
  '(jdee-db-spec-breakpoint-face-colors (cons "#191C25" "#434C5E"))
  '(objed-cursor-color "#BF616A")
  '(org-agenda-files
-   (quote
-    ("/home/user/ownCloud/org/agenda/daily-work.org" "/home/user/ownCloud/org/agenda/projects.org" "/home/user/ownCloud/org/blog/org-templates/style.org" "/home/user/ownCloud/org/blog/posts/2020-10-25.org" "/home/user/ownCloud/org/blog/posts/index.org" "/home/user/ownCloud/org/blog/posts/post3.org" "/home/user/ownCloud/org/blog/posts/post_one.org" "/home/user/ownCloud/org/blog/posts/sitemap.org" "/home/user/ownCloud/org/blog/index.org" "/home/user/ownCloud/org/blog/remember.org" "/home/user/ownCloud/org/projects/fuzzing.org" "/home/user/ownCloud/org/tutorials/agenda-basics.org" "/home/user/ownCloud/org/tutorials/basic-orgs.org" "/home/user/ownCloud/org/journal/2020/20201116")))
- '(package-selected-packages (quote (conda org-download evil-mu4e)))
+   '("/home/user/ownCloud/org/agenda/daily-work.org" "/home/user/ownCloud/org/agenda/projects.org" "/home/user/ownCloud/org/blog/org-templates/style.org" "/home/user/ownCloud/org/blog/posts/2020-10-25.org" "/home/user/ownCloud/org/blog/posts/index.org" "/home/user/ownCloud/org/blog/posts/post3.org" "/home/user/ownCloud/org/blog/posts/post_one.org" "/home/user/ownCloud/org/blog/posts/sitemap.org" "/home/user/ownCloud/org/blog/index.org" "/home/user/ownCloud/org/blog/remember.org" "/home/user/ownCloud/org/projects/fuzzing.org" "/home/user/ownCloud/org/tutorials/agenda-basics.org" "/home/user/ownCloud/org/tutorials/basic-orgs.org" "/home/user/ownCloud/org/journal/2020/20201123"))
+ '(package-selected-packages '(conda org-download evil-mu4e))
  '(pdf-view-midnight-colors (cons "#ECEFF4" "#2E3440"))
  '(rustic-ansi-faces
    ["#2E3440" "#BF616A" "#A3BE8C" "#EBCB8B" "#81A1C1" "#B48EAD" "#88C0D0" "#ECEFF4"])

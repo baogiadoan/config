@@ -152,7 +152,6 @@ fi
 # For a full list of active aliases, run `alias`.
 #
 # Example aliases
-conda activate pytorch
 alias zshconfig="nvim ~/.zshrc"
 #alias ohmyzsh="mate ~/.oh-my-zsh"
 alias ta="tmux a -t"
@@ -183,7 +182,7 @@ alias weather='figlet "Weather" | lolcat
 #export PS1='$red$USER$reset@$green$HOST:$reset~'
 #
 source $HOME/.cargo/env
-export PATH="${PATH}:${HOME}/.local/bin/"
+export PATH="${PATH}:${HOME}/.local/bin/:${HOME}/.emacs.d/bin/"
 
 # >>> conda initialize >>>
 # !! Contents within this block are managed by 'conda init' !!
@@ -200,3 +199,4 @@ fi
 unset __conda_setup
 # <<< conda initialize <<<
 
+conda activate pytorch

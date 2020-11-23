@@ -23,6 +23,7 @@ font-3 = FontAwesome:size=10;1
 font-4 = Hack Nerd Font:size=10;2
 
 modules-left = i3
+modules-center = title
 modules-right = alsa wired-network date
 
 
@@ -50,6 +51,7 @@ font-4 = Hack Nerd Font:size=10;2
 
 
 modules-left = i3
+modules-center = title
 modules-right = 
 
 [bar/bottom]
@@ -229,6 +231,15 @@ ramp-coreload-6-foreground = #ff5555
 ramp-coreload-7 = █
 ramp-coreload-7-font = 2
 ramp-coreload-7-foreground = #ff5555
+
+[module/title]
+type = internal/xwindow
+
+format = <label>
+; format-foreground = ${color.fg}
+
+label =  %title% 
+label-maxlen = 50
 
 [module/date]
 type = internal/date
