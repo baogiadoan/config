@@ -8,6 +8,8 @@
 
 ;; To install SOME-PACKAGE from MELPA, ELPA or emacsmirror:
 ;(package! some-package)
+(require 'package)
+(add-to-list 'package-archives '("org" . "https://orgmode.org/elpa/") t)
 (package! org-bullets)
 (package! org-journal)
 (package! evil-snipe)
@@ -16,6 +18,12 @@
 (package! mu4e-alert)
 (package! org-super-agenda)
 (package! conda)
+(package! openwith)
+(package! lsp-python-ms)
+(package! dap-mode)
+(package! realgud)
+(package! org-tree-slide)
+(package! ox-reveal)
 
 
 ;; To install a package directly from a remote git repo, you must specify a

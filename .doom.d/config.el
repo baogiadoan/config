@@ -380,3 +380,19 @@ long messages in some external browser (see `browse-url-generic-program')."
   conda-env-subdirectory "envs")
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(require 'lsp-mode)
+(require 'dap-mode)
+(require 'dap-ui)
+(require 'dap-python)
+(dap-mode 1)
+(dap-ui-mode 1)
+
+;; load ox-reveal
+;; (load! "lisp/ox-reveal")
+;; (setq org-reveal-root "file:///home/user/reveal.js-4.1.0")
+
+;; PDFs visited in Org-mode are opened in Evince (and not in the default choice)
+(eval-after-load "org"
+  '(progn
+     ;; Change .pdf association directly within the alist
+     (setcdr (assoc "\\.pdf\\'" org-file-apps) "zathura %s")))
