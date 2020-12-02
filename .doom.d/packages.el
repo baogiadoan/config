@@ -24,6 +24,8 @@
 (package! realgud)
 (package! org-tree-slide)
 (package! ox-reveal)
+(package! org-fancy-priorities)
+(package! forge)
 
 
 ;; To install a package directly from a remote git repo, you must specify a

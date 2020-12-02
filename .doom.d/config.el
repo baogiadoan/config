@@ -56,13 +56,19 @@
 ;; change `org-directory'. It must be set before org loads!
 (after! org
   (setq org-directory "~/ownCloud/org/")
+  (setq org-default-notes-file (concat org-directory "/notes.org"))
   (setq org-agenda-files (directory-files-recursively "~/ownCloud/org/" "\\.org$")) ;; set the file for the org agenda,
   ;; could be multiple files
   ;; (setq org-log-done 'time) ;; log the time after done the task
-  (setq org-log-done 'note) ;; log the time and give a NOTE after done the task
+  ;; (setq org-log-done 'note) ;; log the time and give a NOTE after done the task
+  ;; this is no need as I added @ after each keyword to take notes for every state change.
 
+  (require 'org-journal)
+  (setq org-journal-dir "~/ownCloud/org/journal/2020/")
   ;; org-journal integrate to org-agenda
   (setq org-journal-enable-agenda-integration t)
+  ;; date format
+  (setq org-journal-date-format "%A, %d/%m/%y")
   ;; blog settings -- Org capture template
   (defun create-blog-post ()
           "Create an org file in ~/ownCloud/org/blog/posts"
@@ -75,17 +81,15 @@
                   (file "~/.doom.d/org-templates/post.orgcaptmpl"))))
 
   ;; pretty bullets
-  (use-package org-bullets
+  (use-package! org-bullets
       :hook (org-mode . org-bullets-mode))
 
-  (require 'org-journal)
-  (setq org-journal-dir "~/ownCloud/org/journal/2020/")
 
 
   ;;org-super-agenda
   ;;
   (require 'org-super-agenda)
-  (use-package org-super-agenda
+  (use-package! org-super-agenda
   :after org-agenda
   :init
   (setq org-agenda-skip-scheduled-if-done t
@@ -94,13 +98,13 @@
       org-agenda-block-separator nil
       org-agenda-compact-blocks t
       org-agenda-start-day nil ;; i.e. today
-      org-agenda-span 1
+      org-agenda-span 7
       org-agenda-start-on-weekday nil)
   (setq org-agenda-custom-commands
         '(("c" "Super view"
            ((agenda "" ((org-agenda-overriding-header "")
                         (org-super-agenda-groups
-                         '((:name "Today"
+                         '((:name ""
                                   :time-grid t
                                   :date today
                                   :order 0)))))
@@ -135,7 +139,7 @@
 
 ;; This determines the style of line numbers in effect. If set to `nil', line
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
-(setq display-line-numbers-type t)
+(setq display-line-numbers-type 'relative)
 (evil-snipe-mode +1)
 (evil-snipe-override-mode +1)
 
@@ -396,3 +400,34 @@ long messages in some external browser (see `browse-url-generic-program')."
   '(progn
      ;; Change .pdf association directly within the alist
      (setcdr (assoc "\\.pdf\\'" org-file-apps) "zathura %s")))
+
+;; reminder set-up
+; Erase all reminders and rebuilt reminders for today from the agenda
+(defun bh/org-agenda-to-appt ()
+  (interactive)
+  (setq appt-time-msg-list nil)
+  (org-agenda-to-appt))
+
+; Rebuild the reminders everytime the agenda is displayed
+(add-hook 'org-agenda-finalize-hook 'bh/org-agenda-to-appt 'append)
+
+; This is at the end of my .emacs - so appointments are set up when Emacs starts
+(bh/org-agenda-to-appt)
+
+; Activate appointments so we get notifications
+(appt-activate t)
+
+; If we leave Emacs running overnight - reset the appointments one minute after midnight
+(run-at-time "24:01" nil 'bh/org-agenda-to-appt)
+
+; org fancy priorities
+; to make tasks a bit more fun and fancy
+(use-package!
+    org-fancy-priorities
+  :ensure t
+  :hook
+  (org-mode . org-fancy-priorities-mode)
+  :config
+  (setq org-fancy-priorities-list '("⚡" "⬆" "⬇" "☕")))
+; set org-modules for habit
+(setq org-modules '(org-habit))

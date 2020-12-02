@@ -14,8 +14,12 @@
  '(jdee-db-spec-breakpoint-face-colors (cons "#191C25" "#434C5E"))
  '(objed-cursor-color "#BF616A")
  '(org-agenda-files
-   '("~/ownCloud/org/agenda/daily-work.org" "~/ownCloud/org/agenda/inbox.org" "~/ownCloud/org/agenda/projects.org" "~/ownCloud/org/blog/org-templates/style.org" "~/ownCloud/org/blog/posts/2020-10-25.org" "~/ownCloud/org/blog/posts/index.org" "~/ownCloud/org/blog/posts/post3.org" "~/ownCloud/org/blog/posts/post_one.org" "~/ownCloud/org/blog/posts/sitemap.org" "~/ownCloud/org/blog/index.org" "~/ownCloud/org/blog/remember.org" "~/ownCloud/org/intuition/GAN.org" "~/ownCloud/org/latex/intro.org" "~/ownCloud/org/literature/adversarial.org" "~/ownCloud/org/literature/backdoor.org" "~/ownCloud/org/literature/general.org" "~/ownCloud/org/projects/TnT/response.org" "~/ownCloud/org/projects/fuzzing/fuzzing.org" "~/ownCloud/org/projects/fuzzing/ideas.org" "~/ownCloud/org/projects/fuzzing.org" "~/ownCloud/org/tutorials/agenda-basics.org" "~/ownCloud/org/tutorials/basic-orgs.org" "~/ownCloud/org/writing/writing.org" "/home/user/ownCloud/org/journal/2020/20201130"))
- '(package-selected-packages '(org-pdftools lsp-python-ms conda org-download evil-mu4e))
+   '("~/ownCloud/org/todo.org" "~/ownCloud/org/blog/org-templates/style.org" "~/ownCloud/org/blog/posts/2020-10-25.org" "~/ownCloud/org/blog/posts/index.org" "~/ownCloud/org/blog/posts/post3.org" "~/ownCloud/org/blog/posts/post_one.org" "~/ownCloud/org/blog/posts/sitemap.org" "~/ownCloud/org/blog/index.org" "~/ownCloud/org/blog/remember.org" "~/ownCloud/org/intuition/GAN.org" "~/ownCloud/org/latex/intro.org" "~/ownCloud/org/literature/adversarial.org" "~/ownCloud/org/literature/backdoor.org" "~/ownCloud/org/literature/general.org" "~/ownCloud/org/projects/TnT/response.org" "~/ownCloud/org/tutorials/agenda-basics.org" "~/ownCloud/org/tutorials/basic-orgs.org" "~/ownCloud/org/writing/writing.org" "/home/user/ownCloud/org/journal/2020/20201202"))
+ '(org-todo-keywords
+   '((sequence "TODO(t@)" "PROJ(p@)" "STRT(s@)" "WAIT(w@)" "APPT(a@)" "HOLD(h@)" "|" "DONE(d@)" "KILL(k@)")
+     (sequence "[ ](T)" "[-](S)" "[?](W)" "|" "[X](D)")))
+ '(package-selected-packages
+   '(forge org-pdftools lsp-python-ms conda org-download evil-mu4e))
  '(pdf-view-midnight-colors (cons "#ECEFF4" "#2E3440"))
  '(rustic-ansi-faces
    ["#2E3440" "#BF616A" "#A3BE8C" "#EBCB8B" "#81A1C1" "#B48EAD" "#88C0D0" "#ECEFF4"])
