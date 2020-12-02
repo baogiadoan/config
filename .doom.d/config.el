@@ -56,7 +56,7 @@
 ;; change `org-directory'. It must be set before org loads!
 (after! org
   (setq org-directory "~/ownCloud/org/")
-  (setq org-default-notes-file (concat org-directory "/notes.org"))
+  (setq org-default-notes-file (concat org-directory "/refile.org"))
   (setq org-agenda-files (directory-files-recursively "~/ownCloud/org/" "\\.org$")) ;; set the file for the org agenda,
   ;; could be multiple files
   ;; (setq org-log-done 'time) ;; log the time after done the task
@@ -75,10 +75,6 @@
           (interactive)
           (let ((name (read-string "Filename: ")))
           (expand-file-name (format "%s.org" name) "~/ownCloud/org/blog/posts/")))
-  (setq org-capture-templates
-          '(("p" "Post" plain
-                  (file create-blog-post)
-                  (file "~/.doom.d/org-templates/post.orgcaptmpl"))))
 
   ;; pretty bullets
   (use-package! org-bullets
@@ -135,6 +131,61 @@
   (org-super-agenda-mode))
   ;; workaround for conflict keybinding at org-super-agenda vs evil-mode
   (setq org-super-agenda-header-map (make-sparse-keymap))
+
+
+        ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+        ;; follow some pro tips for using org mode
+        ;; I use C-c c to start capture mode
+        (global-set-key (kbd "C-c c") 'org-capture)
+        ;; Capture templates for: TODO tasks, Notes, appointments, phone calls, meetings, and org-protocol
+        (setq org-todo-state-tags-triggers
+        (quote (("CANCELLED" ("CANCELLED" . t))
+                ("WAITING" ("WAITING" . t))
+                ("HOLD" ("WAITING") ("HOLD" . t))
+                (done ("WAITING") ("HOLD"))
+                ("TODO" ("WAITING") ("CANCELLED") ("HOLD"))
+                ("NEXT" ("WAITING") ("CANCELLED") ("HOLD"))
+                ("DONE" ("WAITING") ("CANCELLED") ("HOLD")))))
+
+        (setq org-capture-templates
+        (quote (("t" "todo" entry (file "~/ownCloud/org/refile.org")
+                "* TODO %?\n%U\n%a" :clock-in t :clock-resume t)
+                ("r" "respond" entry (file "~/ownCloud/org/refile.org")
+                "* NEXT Respond to %:from on %:subject\nSCHEDULED: %t\n%U\n%a\n" :clock-in t :clock-resume t :immediate-finish t)
+                ("n" "note" entry (file "~/ownCloud/org/refile.org")
+                "* %? :NOTE:\n%U\n%a\n" :clock-in t :clock-resume t)
+                ("j" "Journal" entry (file+datetree "~/ownCloud/org/diary.org")
+                "* %?\n%U\n" :clock-in t :clock-resume t)
+                ("w" "org-protocol" entry (file "~/ownCloud/org/refile.org")
+                "* TODO Review %c\n%U\n" :immediate-finish t)
+                ("m" "Meeting" entry (file "~/ownCloud/org/refile.org")
+                "* MEETING with %? :MEETING:\n%U" :clock-in t :clock-resume t)
+                ("p" "Post" plain
+                        (file create-blog-post)
+                        (file "~/.doom.d/org-templates/post.orgcaptmpl"))
+                ("h" "Habit" entry (file "~/ownCloud/org/refile.org")
+                "* NEXT %?\n%U\n%a\nSCHEDULED: %(format-time-string \"%<<%Y-%m-%d %a .+1d/3d>>\")\n:PROPERTIES:\n:STYLE: habit\n:REPEAT_TO_STATE: NEXT\n:END:\n"))))
+        ;; Remove empty LOGBOOK drawers on clock out
+        (defun bh/remove-empty-drawer-on-clock-out ()
+        (interactive)
+        (save-excursion
+        (beginning-of-line 0)
+        (org-remove-empty-drawer-at (point))))
+
+        (add-hook 'org-clock-out-hook 'bh/remove-empty-drawer-on-clock-out 'append)
+        ; set   the custom agenda view
+        ;
+        ; Targets include this file and any file contributing to the agenda - up to 9 levels deep
+        (setq org-refile-targets (quote ((nil :maxlevel . 9)
+                                        (org-agenda-files :maxlevel . 9))))
+
+        ;; Do not dim blocked tasks
+        (setq org-agenda-dim-blocked-tasks nil)
+        ;; Compact the block agenda view
+        (setq org-agenda-compact-blocks t)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
  )
 
 ;; This determines the style of line numbers in effect. If set to `nil', line
@@ -168,7 +219,7 @@
 (require 'mu4e)
 ;; use mu4e for e-mail in emacs
 (setq mail-user-agent 'mu4e-user-agent)
-(setq mu4e-maildir "/home/user/Maildir")
+(setq mu4e-maildir "/home/baodoan/Maildir")
 ;; (setq message-signature-file "~/.doom.d/.signature") ; put your signature in this file
 ;; show images
 (setq mu4e-view-show-images t)
@@ -378,9 +429,9 @@ long messages in some external browser (see `browse-url-generic-program')."
 ;; if you want auto-activation (see below for details), include:
 (conda-env-autoactivate-mode t)
 (custom-set-variables
- '(conda-anaconda-home "/home/user/anaconda3/"))
+ '(conda-anaconda-home "/home/baodoan/anaconda3/"))
 (setq
-  conda-env-home-directory (expand-file-name "/home/user/anaconda3/") ;; as in previous example; not required
+  conda-env-home-directory (expand-file-name "/home/baodoan/anaconda3/") ;; as in previous example; not required
   conda-env-subdirectory "envs")
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
