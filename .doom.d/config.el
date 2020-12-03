@@ -94,37 +94,56 @@
       org-agenda-block-separator nil
       org-agenda-compact-blocks t
       org-agenda-start-day nil ;; i.e. today
-      org-agenda-span 7
+      ;; org-agenda-span 1
       org-agenda-start-on-weekday nil)
   (setq org-agenda-custom-commands
         '(("c" "Super view"
-           ((agenda "" ((org-agenda-overriding-header "")
+           ((agenda "" (
+                        (org-agenda-overriding-header "")
+                        (org-agenda-span 'day)
                         (org-super-agenda-groups
-                         '((:name ""
+                         '((:name "Today"
                                   :time-grid t
+                                  ;; :scheduled today
                                   :date today
                                   :order 0)))))
             (alltodo "" ((org-agenda-overriding-header "")
                          (org-super-agenda-groups
                           '((:log t)
+                            (:name "Tasks to Refile"
+                                   :tag "REFILE")
+                            (:name "Habits"
+                                :habit t
+                                :order 9
+                             )
                             (:name "Important"
                                    :priority "A")
+                            (:name "Scheduled Soon"
+                                :scheduled future
+                                :order 4
+                             )
+                            (:name "Next Tasks"
+                                   :todo "NEXT")
                             (:name "Other Priorities"
                                    :priority< "A")
-                            (:name "BIG 3"
-                                   :tag "BIG")
-                            (:name "Today's tasks"
-                                   :file-path "journal")
+                            ;; (:name "BIG 3"
+                            ;;        :tag "BIG")
+                            ;; (:name "Today's tasks"
+                            ;;        :file-path "journal")
+                            (:name "Tasks"
+                                   :todo "TODO")
                             (:name "Due Today"
                                    :deadline today)
-                            (:name "Scheduled Soon"
-                                   :scheduled future)
                             (:name "Due Soon"
                                    :deadline future)
                             (:name "Meetings"
-                                   :tag "MEET")
+                                   :todo "MEETING")
+                            (:name "Tasks Waiting"
+                                   :todo "WAITING")
                             (:name "Overdue"
                                    :deadline past)
+                            (:name "On-hold"
+                                   :todo "HOLD")
                             ;; (:discard (:not (:todo "TODO")))))))))))
                             ))))))))
   :config
@@ -132,11 +151,18 @@
   ;; workaround for conflict keybinding at org-super-agenda vs evil-mode
   (setq org-super-agenda-header-map (make-sparse-keymap))
 
+        (defun org-journal-find-location ()
+        ;; Open today's journal, but specify a non-nil prefix argument in order to
+        ;; inhibit inserting the heading; org-capture will insert the heading.
+        (org-journal-new-entry t)
+        (unless (eq org-journal-file-type 'daily)
+        (org-narrow-to-subtree))
+        (goto-char (point-max)))
 
         ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
         ;; follow some pro tips for using org mode
         ;; I use C-c c to start capture mode
-        (global-set-key (kbd "C-c c") 'org-capture)
+        ;; (global-set-key (kbd "C-c c") 'org-capture)
         ;; Capture templates for: TODO tasks, Notes, appointments, phone calls, meetings, and org-protocol
         (setq org-todo-state-tags-triggers
         (quote (("CANCELLED" ("CANCELLED" . t))
@@ -154,8 +180,11 @@
                 "* NEXT Respond to %:from on %:subject\nSCHEDULED: %t\n%U\n%a\n" :clock-in t :clock-resume t :immediate-finish t)
                 ("n" "note" entry (file "~/ownCloud/org/refile.org")
                 "* %? :NOTE:\n%U\n%a\n" :clock-in t :clock-resume t)
-                ("j" "Journal" entry (file+datetree "~/ownCloud/org/diary.org")
-                "* %?\n%U\n" :clock-in t :clock-resume t)
+                ;; ("j" "Journal" entry (file+datetree "~/ownCloud/org/diary.org")
+                ;; "* %?\n%U\n" :clock-in t :clock-resume t)
+                ("j" "Journal entry" plain (function org-journal-find-location)
+                               "** %(format-time-string org-journal-time-format)%^{Title}\n%i%?"
+                                :clock-in t :clock-resume t)
                 ("w" "org-protocol" entry (file "~/ownCloud/org/refile.org")
                 "* TODO Review %c\n%U\n" :immediate-finish t)
                 ("m" "Meeting" entry (file "~/ownCloud/org/refile.org")
@@ -179,10 +208,6 @@
         (setq org-refile-targets (quote ((nil :maxlevel . 9)
                                         (org-agenda-files :maxlevel . 9))))
 
-        ;; Do not dim blocked tasks
-        (setq org-agenda-dim-blocked-tasks nil)
-        ;; Compact the block agenda view
-        (setq org-agenda-compact-blocks t)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 

@@ -49,4 +49,6 @@
 (define-key evil-window-map (kbd "C-j") 'evil-window-down)
 (define-key evil-window-map (kbd "C-k") 'evil-window-up)
 
+;; some of my keybinding
+(global-set-key (kbd "<f12>") 'org-agenda)
 ;; yay, it worked
