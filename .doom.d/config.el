@@ -81,6 +81,17 @@
       :hook (org-mode . org-bullets-mode))
 
 
+        ; org fancy priorities
+        ; to make tasks a bit more fun and fancy
+        (use-package! org-fancy-priorities
+        :ensure t
+        :hook
+        (org-mode . org-fancy-priorities-mode)
+        :config
+        (setq org-fancy-priorities-list '("⚡" "⬆" "⬇" "☕")))
+        ; set org-modules for habit
+        (setq org-modules '(org-habit))
+
 
   ;;org-super-agenda
   ;;
@@ -137,7 +148,9 @@
                             (:name "Due Soon"
                                    :deadline future)
                             (:name "Meetings"
-                                   :todo "MEETING")
+                                :todo "MEETING"
+                                :scheduled today
+                             )
                             (:name "Tasks Waiting"
                                    :todo "WAITING")
                             (:name "Overdue"
@@ -183,8 +196,7 @@
                 ;; ("j" "Journal" entry (file+datetree "~/ownCloud/org/diary.org")
                 ;; "* %?\n%U\n" :clock-in t :clock-resume t)
                 ("j" "Journal entry" plain (function org-journal-find-location)
-                               "** %(format-time-string org-journal-time-format)%^{Title}\n%i%?"
-                                :clock-in t :clock-resume t)
+                               "** %(format-time-string org-journal-time-format)%^{Title}%?\n%U\n" :clock-in t :clock-resume t)
                 ("w" "org-protocol" entry (file "~/ownCloud/org/refile.org")
                 "* TODO Review %c\n%U\n" :immediate-finish t)
                 ("m" "Meeting" entry (file "~/ownCloud/org/refile.org")
@@ -495,15 +507,3 @@ long messages in some external browser (see `browse-url-generic-program')."
 
 ; If we leave Emacs running overnight - reset the appointments one minute after midnight
 (run-at-time "24:01" nil 'bh/org-agenda-to-appt)
-
-; org fancy priorities
-; to make tasks a bit more fun and fancy
-(use-package!
-    org-fancy-priorities
-  :ensure t
-  :hook
-  (org-mode . org-fancy-priorities-mode)
-  :config
-  (setq org-fancy-priorities-list '("⚡" "⬆" "⬇" "☕")))
-; set org-modules for habit
-(setq org-modules '(org-habit))
