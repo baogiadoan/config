@@ -49,6 +49,8 @@
 (define-key evil-window-map (kbd "C-j") 'evil-window-down)
 (define-key evil-window-map (kbd "C-k") 'evil-window-up)
 
-;; some of my keybinding
+;; some of my keybinding stealed from pros
 (global-set-key (kbd "<f12>") 'org-agenda)
+(global-set-key (kbd "<f9> i") 'bh/punch-in)
+(global-set-key (kbd "<f9> o") 'bh/punch-out)
 ;; yay, it worked
