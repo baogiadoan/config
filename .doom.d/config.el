@@ -69,6 +69,7 @@
   (setq org-journal-enable-agenda-integration t)
   ;; date format
   (setq org-journal-date-format "%A, %d/%m/%y")
+  (setq org-journal-encrypt-journal t)
   ;; blog settings -- Org capture template
   (defun create-blog-post ()
           "Create an org file in ~/ownCloud/org/blog/posts"
@@ -76,6 +77,21 @@
           (let ((name (read-string "Filename: ")))
           (expand-file-name (format "%s.org" name) "~/ownCloud/org/blog/posts/")))
 
+
+  ;;org-super-agenda
+  ;;
+  (require 'org-super-agenda)
+  (use-package! org-super-agenda
+  :after org-agenda
+  :init
+  (setq org-agenda-skip-scheduled-if-done t
+      org-agenda-skip-deadline-if-done t
+      org-agenda-include-deadlines t
+      org-agenda-block-separator nil
+      org-agenda-compact-blocks t
+      org-agenda-start-day nil ;; i.e. today
+      ;; org-agenda-span 1
+      org-agenda-start-on-weekday nil)
   ;; pretty bullets
   (use-package! org-bullets
       :hook (org-mode . org-bullets-mode))
@@ -93,20 +109,6 @@
         (setq org-modules '(org-habit))
 
 
-  ;;org-super-agenda
-  ;;
-  (require 'org-super-agenda)
-  (use-package! org-super-agenda
-  :after org-agenda
-  :init
-  (setq org-agenda-skip-scheduled-if-done t
-      org-agenda-skip-deadline-if-done t
-      org-agenda-include-deadlines t
-      org-agenda-block-separator nil
-      org-agenda-compact-blocks t
-      org-agenda-start-day nil ;; i.e. today
-      ;; org-agenda-span 1
-      org-agenda-start-on-weekday nil)
   (setq org-agenda-custom-commands
         '(("c" "Super view"
            ((agenda "" (
@@ -219,8 +221,15 @@
         ; Targets include this file and any file contributing to the agenda - up to 9 levels deep
         (setq org-refile-targets (quote ((nil :maxlevel . 9)
                                         (org-agenda-files :maxlevel . 9))))
-
-
+        ;; Agenda clock report parameters
+        (setq org-agenda-clockreport-parameter-plist
+        (quote (:link t :maxlevel 5 :fileskip0 t :compact t :narrow 80)))
+        ; Set default column view headings: Task Effort Clock_Summary
+        (setq org-columns-default-format "%80ITEM(Task) %10Effort(Effort){:} %10CLOCKSUM")
+        ; global Effort estimate values
+        ; global STYLE property values for completion
+        (setq org-global-properties (quote (("Effort_ALL" . "0:15 0:30 0:45 1:00 2:00 3:00 4:00 5:00 6:00 0:00")
+                                        ("STYLE_ALL" . "habit"))))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; clock in defined functions
@@ -597,19 +606,27 @@ long messages in some external browser (see `browse-url-generic-program')."
 ;; (defun my-org-archive-done-tasks ()
 ;;   (interactive)
 ;;   (org-map-entries 'org-archive-subtree "/DONE" 'file));
+;; (defun org-archive-done-tasks ()
+;;   (interactive)
+;;   (org-map-entries
+;;    (lambda ()
+;;      (org-archive-subtree)
+;;      (Setq org-map-continue-from (outline-previous-heading)))
+;;    "/DONE" 'file)
+;;   (org-map-entries
+;;    (lambda ()
+;;      (org-archive-subtree)
+;;      (setq org-map-continue-from (outline-previous-heading)))
+;;    "/CANCELLED" 'file)
+;; )
 (defun org-archive-done-tasks ()
   (interactive)
   (org-map-entries
    (lambda ()
      (org-archive-subtree)
-     (Setq org-map-continue-from (outline-previous-heading)))
-   "/DONE" 'file)
-  (org-map-entries
-   (lambda ()
-     (org-archive-subtree)
-     (setq org-map-continue-from (outline-previous-heading)))
-   "/CANCELLED" 'file)
-)
+     (setq org-map-continue-from (org-element-property :begin (org-element-at-point))))
+   "/DONE" 'tree))
+
 
 ;; mu4e-alert
 (mu4e-alert-set-default-style 'libnotify)

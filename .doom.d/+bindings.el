@@ -53,4 +53,5 @@
 (global-set-key (kbd "<f12>") 'org-agenda)
 (global-set-key (kbd "<f9> i") 'bh/punch-in)
 (global-set-key (kbd "<f9> o") 'bh/punch-out)
+(global-set-key (kbd "C-c C-x i") 'org-insert-columns-dblock)
 ;; yay, it worked
