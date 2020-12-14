@@ -454,7 +454,7 @@
 (require 'mu4e)
 ;; use mu4e for e-mail in emacs
 (setq mail-user-agent 'mu4e-user-agent)
-(setq mu4e-maildir "/home/baodoan/Maildir")
+(setq mu4e-maildir "~/Maildir")
 ;; (setq message-signature-file "~/.doom.d/.signature") ; put your signature in this file
 ;; show images
 (setq mu4e-view-show-images t)
@@ -675,9 +675,9 @@ long messages in some external browser (see `browse-url-generic-program')."
 ;; if you want auto-activation (see below for details), include:
 (conda-env-autoactivate-mode t)
 (custom-set-variables
- '(conda-anaconda-home "/home/baodoan/anaconda3/"))
+ '(conda-anaconda-home "~/anaconda3/"))
 (setq
-  conda-env-home-directory (expand-file-name "/home/baodoan/anaconda3/") ;; as in previous example; not required
+  conda-env-home-directory (expand-file-name "~/anaconda3/") ;; as in previous example; not required
   conda-env-subdirectory "envs")
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -747,3 +747,23 @@ long messages in some external browser (see `browse-url-generic-program')."
 (use-package polymode
   :config
   (add-hook 'org-brain-visualize-mode-hook #'org-brain-polymode))
+
+
+;; org-mind-map config
+;; This is an Emacs package that creates graphviz directed graphs from
+;; the headings of an org file
+(use-package! org-mind-map
+  :init
+  (require 'ox-org)
+  :ensure t
+  ;; Uncomment the below if 'ensure-system-packages` is installed
+  ;; :ensure-system-package (gvgen . graphviz)
+  :config
+  (setq org-mind-map-engine "dot")       ; Default. Directed Graph
+  ;; (setq org-mind-map-engine "neato")  ; Undirected Spring Graph
+  ;; (setq org-mind-map-engine "twopi")  ; Radial Layout
+  ;; (setq org-mind-map-engine "fdp")    ; Undirected Spring Force-Directed
+  ;; (setq org-mind-map-engine "sfdp")   ; Multiscale version of fdp for the layout of large graphs
+  ;; (setq org-mind-map-engine "twopi")  ; Radial layouts
+  ;; (setq org-mind-map-engine "circo")  ; Circular Layout
+  )

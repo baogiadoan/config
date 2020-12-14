@@ -29,6 +29,7 @@
 (package! org-download)
 (package! org-brain)
 (package! polymode)
+(package! org-mind-map)
 
 
 
