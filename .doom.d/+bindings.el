@@ -54,4 +54,5 @@
 (global-set-key (kbd "<f9> i") 'bh/punch-in)
 (global-set-key (kbd "<f9> o") 'bh/punch-out)
 (global-set-key (kbd "C-c C-x i") 'org-insert-columns-dblock)
+(global-set-key (kbd "C-c d") 'org-decrypt-entry)
 ;; yay, it worked

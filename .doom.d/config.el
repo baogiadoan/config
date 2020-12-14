@@ -65,18 +65,30 @@
 
   (require 'org-journal)
   (setq org-journal-dir "~/ownCloud/org/journal/2020/")
+  ;; (setq org-agenda-files (list "~/ownCloud/org/journal/2020/")
+  ;; (setq org-agenda-file-regexp "\\`[^.].*\\.org\\'\\|\\`[0-9]+\\'")
   ;; org-journal integrate to org-agenda
   (setq org-journal-enable-agenda-integration t)
+  ;; (setq org-journal-enable-encryption t)
   ;; date format
   (setq org-journal-date-format "%A, %d/%m/%y")
-  (setq org-journal-encrypt-journal t)
+  (setq org-journal-key nil)
   ;; blog settings -- Org capture template
   (defun create-blog-post ()
           "Create an org file in ~/ownCloud/org/blog/posts"
           (interactive)
           (let ((name (read-string "Filename: ")))
           (expand-file-name (format "%s.org" name) "~/ownCloud/org/blog/posts/")))
-
+  ;; org-crypt
+  ;; (setq org-modules '(org-crypt))
+  ;; '(org-load-modules-maybe t)
+  ;; (use-package org
+  ;;   :bind ("C-c d" . org-decrypt-entry)
+  ;;   :init (org-crypt-use-before-save-magic)
+  ;;   :custom
+  ;;   (org-tags-exclude-from-inheritance (quote ("crypt")))
+  ;;   (org-crypt-key nil)
+  ;;   (auto-save-default nil))
 
   ;;org-super-agenda
   ;;
@@ -646,7 +658,10 @@ long messages in some external browser (see `browse-url-generic-program')."
 (require 'epa)
 (epa-file-enable)
 
-
+;; workaround to fix rg search within project
+;; Will only work on macos/linux
+(after! counsel
+  (setq counsel-rg-base-command "rg -M 240 --with-filename --no-heading --line-number --color never %s || true"))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; conda
@@ -678,10 +693,10 @@ long messages in some external browser (see `browse-url-generic-program')."
 ;; (setq org-reveal-root "file:///home/user/reveal.js-4.1.0")
 
 ;; PDFs visited in Org-mode are opened in Evince (and not in the default choice)
-(eval-after-load "org"
-  '(progn
-     ;; Change .pdf association directly within the alist
-     (setcdr (assoc "\\.pdf\\'" org-file-apps) "zathura %s")))
+;; (eval-after-load "org"
+;;   '(progn
+;;      ;; Change .pdf association directly within the alist
+;;      (setcdr (assoc "\\.pdf\\'" org-file-apps) "zathura %s")))
 
 ;; reminder set-up
 ; Erase all reminders and rebuilt reminders for today from the agenda
@@ -701,3 +716,34 @@ long messages in some external browser (see `browse-url-generic-program')."
 
 ; If we leave Emacs running overnight - reset the appointments one minute after midnight
 (run-at-time "24:01" nil 'bh/org-agenda-to-appt)
+
+
+;; set up org-brain
+(use-package! org-brain :ensure t
+  :init
+  (setq org-brain-path "~/ownCloud/org/")
+  ;; For Evil users
+  (with-eval-after-load 'evil
+    (evil-set-initial-state 'org-brain-visualize-mode 'emacs))
+  :config
+  (bind-key "C-c b" 'org-brain-prefix-map org-mode-map)
+  (setq org-id-track-globally t)
+  (setq org-id-locations-file "~/ownCloud/org/.org-id-locations")
+  (add-hook 'before-save-hook #'org-brain-ensure-ids-in-buffer)
+  (push '("b" "Brain" plain (function org-brain-goto-end)
+          "* %i%?" :empty-lines 1)
+        org-capture-templates)
+  (setq org-brain-visualize-default-choices 'all)
+  (setq org-brain-title-max-length 50)
+  (setq org-brain-include-file-entries nil
+        org-brain-file-entries-use-title nil)
+;; disable file entries, will enable later if I want to cross link I guess
+  (setq org-brain-headline-entry-name-format-string "%2$s")
+  (setq my/default-org-brain-file "brain")
+  (setq org-brain-default-file-parent my/default-org-brain-file))
+
+;; BUG this is the bug from the package, wait for the solution later
+;; Allows you to edit entries directly from org-brain-visualize
+(use-package polymode
+  :config
+  (add-hook 'org-brain-visualize-mode-hook #'org-brain-polymode))

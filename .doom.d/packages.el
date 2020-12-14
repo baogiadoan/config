@@ -27,6 +27,9 @@
 (package! org-fancy-priorities)
 (package! forge)
 (package! org-download)
+(package! org-brain)
+(package! polymode)
+
 
 
 
