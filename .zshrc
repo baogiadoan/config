@@ -94,6 +94,7 @@ plugins=(
     copyfile
     tmux
     history-substring-search
+    fzf
 )
 
 #ZSH_TMUX_CONFIG = '$HOME/.tmux.conf.local'
@@ -110,6 +111,9 @@ export PATH="$HOME/.rbenv/bin:$PATH"
 source $ZSH/oh-my-zsh.sh
 
 bindkey -v
+# reverse search
+bindkey '^R' history-incremental-search-backward
+
 # User configuration
 
 # export MANPATH="/usr/local/man:$MANPATH"
