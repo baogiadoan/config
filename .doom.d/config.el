@@ -461,17 +461,17 @@
 ;; rich-text message
 (setq mu4e-view-prefer-html t)
 
-(defun my-mu4e-html2text (msg)
-  "My html2text function; shows short message inline, show
-long messages in some external browser (see `browse-url-generic-program')."
-  (let ((html (or (mu4e-message-field msg :body-html) "")))
-    (if (> (length html) 20000)
-      (progn
-	(mu4e-action-view-in-browser msg)
-	"[Viewing message in external browser]")
-      (mu4e-shr2text msg))))
+;; (defun my-mu4e-html2text (msg)
+;;   "My html2text function; shows short message inline, show
+;; long messages in some external browser (see `browse-url-generic-program')."
+;;   (let ((html (or (mu4e-message-field msg :body-html) "")))
+;;     (if (> (length html) 20000)
+;;       (progn
+;; 	(mu4e-action-view-in-browser msg)
+;; 	"[Viewing message in external browser]")
+;;       (mu4e-shr2text msg))))
 
-(setq mu4e-html2text-command 'my-mu4e-html2text)
+;; (setq mu4e-html2text-command 'my-mu4e-html2text)
 
 ;; if it's complicated enough, we will open the email in browser
 (add-to-list 'mu4e-view-actions
@@ -767,3 +767,50 @@ long messages in some external browser (see `browse-url-generic-program')."
   ;; (setq org-mind-map-engine "twopi")  ; Radial layouts
   ;; (setq org-mind-map-engine "circo")  ; Circular Layout
   )
+;;config for flycheck
+;; (defun my-flycheck-setup ()
+;;   (flycheck-add-next-checker 'lsp 'python-flake8))
+
+;; ;; These MODE-local-vars-hook hooks are a Doom thing. They're executed after
+;; ;; MODE-hook, on hack-local-variables-hook. Although `lsp!` is attached to
+;; ;; python-mode-local-vars-hook, it should occur earlier than my-flycheck-setup
+;; ;; this way:
+;; (add-hook 'python-mode-local-vars-hook #'my-flycheck-setup)
+
+(add-hook 'lsp-after-initialize-hook (lambda
+                                       ()
+                                       (flycheck-disable-checker 'python-pylint)
+                                       (flycheck-add-next-checker 'lsp 'python-flake8)))
+
+
+;; (use-package! flycheck
+;;   :config
+;;   (add-to-list 'flycheck-disabled-checkers 'python-pylint)
+;;   (add-hook 'pyhon-mode-local-vars-hook
+;;           (lambda ()
+;;             (when (flycheck-may-enable-checker 'python-flake8)
+;;               (flycheck-select-checker 'python-flake8))))
+;; )
+
+
+;; setup python-black autopep
+;; config.el
+(use-package! python-black
+  :demand t
+  :after python)
+(add-hook! 'python-mode-local-vars-hook #'python-black-on-save-mode)
+;; Feel free to throw your own personal keybindings here
+(map! :leader :desc "Blacken Buffer" "m b b" #'python-black-buffer)
+(map! :leader :desc "Blacken Region" "m b r" #'python-black-region)
+(map! :leader :desc "Blacken Statement" "m b s" #'python-black-statement)
+
+
+;; dap-mode setup
+(use-package! dap-mode)
+(require 'dap-python)
+
+
+;; garbage tweak
+;;
+(after! gcmh
+  (setq gcmh-high-cons-threshold 33554432))  ; 32mb, or 64mb, or *maybe* 128mb, BUT NOT 512mb

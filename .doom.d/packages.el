@@ -30,6 +30,9 @@
 (package! org-brain)
 (package! polymode)
 (package! org-mind-map)
+(package! blacken)
+(package! python-black) ;; blacken autopep
+(package! elpy)
 
 
 
