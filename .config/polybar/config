@@ -78,7 +78,7 @@ font-2 = FontAwesome:size=8;1
 font-3 = FontAwesome:size=10;1
 font-4 = Hack Nerd Font:size=10;2
 
-modules-left = mpd
+modules-left = powermenu
 modules-right = filesystem cpu memory
 
 tray-position = right
@@ -338,3 +338,36 @@ interval = 30
 spacing = 4
 
 # vim: ft=dosini
+
+[module/powermenu]
+type = custom/menu
+
+format-spacing = 1
+
+label-open = 
+label-open-foreground = ${bar/bottom.background}
+label-close =  cancel
+label-close-foreground = ${bar/bottom.foreground}
+label-separator = |
+label-separator-foreground = ${bar/bottom.foreground}
+
+menu-0-0 = reboot
+menu-0-0-exec = menu-open-1
+menu-0-1 = power off
+menu-0-1-exec = menu-open-2
+menu-0-2 = suspend
+menu-0-2-exec = menu-open-3
+
+menu-1-0 = cancel
+menu-1-0-exec = menu-open-0
+menu-1-1 = reboot
+menu-1-1-exec = reboot
+
+menu-2-0 = power off
+menu-2-0-exec = shutdown now 
+menu-2-1 = back
+menu-2-1-exec = menu-open-0
+
+menu-3-0 = suspend
+menu-3-0-exec = pm-suspend
+menu-3-1 = back

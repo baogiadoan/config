@@ -155,16 +155,22 @@
                             ;;        :tag "BIG")
                             ;; (:name "Today's tasks"
                             ;;        :file-path "journal")
+                            (:name "Someday"
+                                :tag "SOMEDAY"
+                                :order 8
+                             )
                             (:name "Tasks"
                                    :todo "TODO")
+                            (:name "Projects"
+                                   :todo "PROJECT")
                             (:name "Due Today"
                                    :deadline today)
-                            (:name "Due Soon"
-                                   :deadline future)
                             (:name "Meetings"
                                 :todo "MEETING"
                                 :scheduled today
                              )
+                            (:name "Due Soon"
+                                   :deadline future)
                             (:name "Tasks Waiting"
                                    :todo "WAITING")
                             (:name "Overdue"
@@ -194,6 +200,7 @@
         (setq org-todo-state-tags-triggers
         (quote (("CANCELLED" ("CANCELLED" . t))
                 ("WAITING" ("WAITING" . t))
+                ("PROJECT" ("PROJECT" . t))
                 ("HOLD" ("WAITING") ("HOLD" . t))
                 (done ("WAITING") ("HOLD"))
                 ("TODO" ("WAITING") ("CANCELLED") ("HOLD"))
@@ -203,6 +210,8 @@
         (setq org-capture-templates
         (quote (("t" "todo" entry (file "~/ownCloud/org/refile.org")
                 "* TODO %?\n%U\n%a" :clock-in t :clock-resume t)
+                ("p" "project" entry (file "~/ownCloud/org/refile.org")
+                "* PROJECT %? :PROJECT:\n%U\n%a" :clock-in t :clock-resume t)
                 ("r" "respond" entry (file "~/ownCloud/org/refile.org")
                 "* NEXT Respond to %:from on %:subject\nSCHEDULED: %t\n%U\n%a\n" :clock-in t :clock-resume t :immediate-finish t)
                 ("n" "note" entry (file "~/ownCloud/org/refile.org")
@@ -805,11 +814,24 @@
 (map! :leader :desc "Blacken Statement" "m b s" #'python-black-statement)
 
 
-;; dap-mode setup
-(use-package! dap-mode)
-(require 'dap-python)
+;; ;; dap-mode setup
+;; (use-package! dap-mode)
+;; (require 'dap-python)
+;; (use-package! python-mode
+;;   :ensure t
+;;   :hook (python-mode  . lsp-deferred)
+;;   :custom
+;;   (dap-python-executable "python")
+;;   (dap-python-debugger 'debugpy)
+;;   :config
+;;   (require 'dap-python)
+;;   )
+(setq dap-python-debugger 'debugpy)
+(unpin! dap-mode lsp-mode treemacs)
+(setq inhibit-eol-conversion t)
 
-
+(add-hook 'dap-stopped-hook
+          (lambda (arg) (call-interactively #'dap-hydra)))
 ;; garbage tweak
 ;;
 (after! gcmh
