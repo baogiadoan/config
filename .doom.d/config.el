@@ -45,6 +45,14 @@
   (setq doom-one-brighter-comments t)
   (setq doom-one-comment-bg nil)
 
+;; set up org-crypt
+(require 'org-crypt)
+(org-crypt-use-before-save-magic)
+(setq org-tags-exclude-from-inheritance (quote ("crypt")))
+;; GPG key to use for encryption
+;; Either the Key ID or set to nil to use symmetric encryption.
+(setq org-crypt-key nil)
+
 ;; change the color of the comments to cyan
 ;; (custom-set-faces
 ;;  `(font-lock-comment-face ((t (:foreground ,(doom-lighten 'cyan .5)))))
@@ -104,16 +112,7 @@
           (interactive)
           (let ((name (read-string "Filename: ")))
           (expand-file-name (format "%s.org" name) "~/ownCloud/org/blog/posts/")))
-  ;; org-crypt
-  ;; (setq org-modules '(org-crypt))
-  ;; '(org-load-modules-maybe t)
-  ;; (use-package org
-  ;;   :bind ("C-c d" . org-decrypt-entry)
-  ;;   :init (org-crypt-use-before-save-magic)
-  ;;   :custom
-  ;;   (org-tags-exclude-from-inheritance (quote ("crypt")))
-  ;;   (org-crypt-key nil)
-  ;;   (auto-save-default nil))
+
 
   ;;org-super-agenda
   ;;
@@ -132,8 +131,6 @@
   ;; pretty bullets
   (use-package! org-bullets
       :hook (org-mode . org-bullets-mode))
-
-
         ; org fancy priorities
         ; to make tasks a bit more fun and fancy
         (use-package! org-fancy-priorities

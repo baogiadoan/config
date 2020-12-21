@@ -174,7 +174,6 @@ alias vi=nvim
 alias openshot="~/..AppImage/OpenShot-v2.5.1-x86_64.AppImage"
 alias stretchly="~/.AppImage/Stretchly-1.2.0.AppImage"
 
-
 #Weather
 alias weather='figlet "Weather" | lolcat 
     \curl wttr\.in/"Adelaide"\?0\?A'
@@ -187,6 +186,7 @@ alias weather='figlet "Weather" | lolcat
 #
 source $HOME/.cargo/env
 export PATH="${PATH}:${HOME}/.local/bin/:${HOME}/.emacs.d/bin/"
+export TERM="xterm-256color"
 
 # >>> conda initialize >>>
 # !! Contents within this block are managed by 'conda init' !!
