@@ -58,10 +58,35 @@
   (setq org-directory "~/ownCloud/org/")
   (setq org-default-notes-file (concat org-directory "/refile.org"))
   (setq org-agenda-files (directory-files-recursively "~/ownCloud/org/" "\\.org$")) ;; set the file for the org agenda,
+  ;; Agenda log mode items to display (closed and state changes by default)
+  (setq org-agenda-log-mode-items (quote (closed state)))
+
   ;; could be multiple files
   ;; (setq org-log-done 'time) ;; log the time after done the task
   ;; (setq org-log-done 'note) ;; log the time and give a NOTE after done the task
   ;; this is no need as I added @ after each keyword to take notes for every state change.
+
+
+  ;; set tags
+  ; Tags with fast selection keys
+  (setq org-tag-alist (quote ((:startgroup)
+                              ("@office" . ?O)
+                              ("@home" . ?H)
+                              (:endgroup)
+                              ("WAITING" . ?w)
+                              ("HOLD" . ?h)
+                              ("PERSONAL" . ?p)
+                              ("WORK" . ?W)
+                              ("ORG" . ?o)
+                              ("crypt" . ?e)
+                              ("NOTE" . ?n)
+                              ("CANCELLED" . ?c)
+                              ("FLAGGED" . ??))))
+  ; Allow setting single tags without the menu
+  (setq org-fast-tag-selection-single-key (quote expert))
+
+  ; For tag searches ignore tasks with scheduled and deadline dates
+  (setq org-agenda-tags-todo-honor-ignore-options t)
 
   (require 'org-journal)
   (setq org-journal-dir "~/ownCloud/org/journal/2020/")
@@ -836,3 +861,26 @@
 ;;
 (after! gcmh
   (setq gcmh-high-cons-threshold 33554432))  ; 32mb, or 64mb, or *maybe* 128mb, BUT NOT 512mb
+
+(setq org-ditaa-jar-path "/bin/ditaa")
+
+;; enable ditaa
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+ '((ditaa . t))) ; this line activates ditaa
+
+;; reset checklist
+(require 'org-checklist)
+(setq org-deadline-warning-days 30)
+
+;; highlight the clock if running out of time
+(custom-set-faces
+  ;; custom-set-faces was added by Custom.
+  ;; If you edit it by hand, you could mess it up, so be careful.
+  ;; Your init file should contain only one such instance.
+  ;; If there is more than one, they won't work right.
+ '(org-mode-line-clock ((t (:foreground "red" :box (:line-width -1 :style released-button)))) t))
+;;prefer future dates or not
+(setq org-read-date-prefer-future nil)
+(setq org-read-date-prefer-future 'time)
+(setq mu4e-index-update-error-warning nil)
