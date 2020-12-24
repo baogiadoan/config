@@ -121,15 +121,15 @@ bindkey '^R' history-incremental-search-backward
 # added by Anaconda3 5.3.0 installer
 # >>> conda init >>>
 # !! Contents within this block are managed by 'conda init' !!
-__conda_setup="$(CONDA_REPORT_ERRORS=false '/home/user/anaconda3/bin/conda' shell.bash hook 2> /dev/null)"
+__conda_setup="$(CONDA_REPORT_ERRORS=false '~/anaconda3/bin/conda' shell.bash hook 2> /dev/null)"
 if [ $? -eq 0 ]; then
     \eval "$__conda_setup"
 else
-    if [ -f "/home/user/anaconda3/etc/profile.d/conda.sh" ]; then
-# . "/home/user/anaconda3/etc/profile.d/conda.sh"  # commented out by conda initialize
+    if [ -f "~/anaconda3/etc/profile.d/conda.sh" ]; then
+# . "~/anaconda3/etc/profile.d/conda.sh"  # commented out by conda initialize
         CONDA_CHANGEPS1=false conda activate pytorch 
     else
-        \export PATH="/home/user/anaconda3/bin:$PATH"
+        \export PATH="~/anaconda3/bin:$PATH"
     fi
 fi
 unset __conda_setup
@@ -190,17 +190,17 @@ export TERM="xterm-256color"
 
 # >>> conda initialize >>>
 # !! Contents within this block are managed by 'conda init' !!
-__conda_setup="$('/home/user/anaconda3/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
+__conda_setup="$('~/anaconda3/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
 if [ $? -eq 0 ]; then
     eval "$__conda_setup"
 else
-    if [ -f "/home/user/anaconda3/etc/profile.d/conda.sh" ]; then
-        . "/home/user/anaconda3/etc/profile.d/conda.sh"
+    if [ -f "~/anaconda3/etc/profile.d/conda.sh" ]; then
+        . "~/anaconda3/etc/profile.d/conda.sh"
     else
-        export PATH="/home/user/anaconda3/bin:$PATH"
+        export PATH="~/anaconda3/bin:$PATH"
     fi
 fi
 unset __conda_setup
 # <<< conda initialize <<<
-
+source ~/anaconda3/bin/activate
 conda activate pytorch
