@@ -68,7 +68,8 @@
   (setq org-agenda-files (directory-files-recursively "~/ownCloud/org/" "\\.org$")) ;; set the file for the org agenda,
   ;; Agenda log mode items to display (closed and state changes by default)
   (setq org-agenda-log-mode-items (quote (closed state)))
-
+  ;; put the state change into drawer
+  (setq org-log-into-drawer t)
   ;; could be multiple files
   ;; (setq org-log-done 'time) ;; log the time after done the task
   ;; (setq org-log-done 'note) ;; log the time and give a NOTE after done the task
@@ -250,7 +251,7 @@
                         (file create-blog-post)
                         (file "~/.doom.d/org-templates/post.orgcaptmpl"))
                 ("h" "Habit" entry (file "~/ownCloud/org/refile.org")
-                "* NEXT %?\n%U\n%a\nSCHEDULED: %(format-time-string \"%<<%Y-%m-%d %a .+1d/3d>>\")\n:PROPERTIES:\n:STYLE: habit\n:REPEAT_TO_STATE: NEXT\n:END:\n"))))
+                "* NEXT %?\nSCHEDULED: %(format-time-string \"%<<%Y-%m-%d %a .+1d/3d>>\")\n:PROPERTIES:\n:STYLE: habit\n:REPEAT_TO_STATE: NEXT\n:END:\n"))))
         ;; Remove empty LOGBOOK drawers on clock out
         (defun bh/remove-empty-drawer-on-clock-out ()
         (interactive)
@@ -881,3 +882,32 @@
 (setq org-read-date-prefer-future nil)
 (setq org-read-date-prefer-future 'time)
 (setq mu4e-index-update-error-warning nil)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; helm-bibtex set-up (need to set-up Mendeley to store to the following location
+;; pdf stored to this location
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(setq bibtex-completion-library-path '("~/ownCloud/org/bibtex/pdfs"))
+;; bibtex file stored to this location
+(setq bibtex-completion-bibliography '("~/ownCloud/org/bibtex/library.bib"))
+;; this enable helm-bibtex to know where is the location of the pdf file corresponding to the bibtex
+(setq bibtex-completion-pdf-field "File")
+(setq bibtex-completion-notes-path "~/ownCloud/org/bibtex/notes.org")
+(setq bibtex-completion-pdf-symbol "⌘")
+(setq bibtex-completion-notes-symbol "✎")
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; set up for org-ref
+(require 'org-ref)
+(setq reftex-default-bibliography '("~/ownCloud/org/bibtex/library.bib"))
+(setq org-ref-bibliography-notes "~/ownCloud/org/bibtex/notes.org"
+      org-ref-default-bibliography '("~/ownCloud/org/bibtex/library.bib")
+      org-ref-pdf-directory "~/ownCloud/org/bibtex/pdfs/")
+(setq org-latex-pdf-process (list "latexmk -shell-escape -bibtex -f -pdf %f"))
+
+;; set-up org-roam
+(use-package! org-roam
+      :ensure t
+      :hook
+      (after-init . org-roam-mode)
+      :custom
+      (org-roam-directory "~/ownCloud/org/roam"))

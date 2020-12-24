@@ -33,6 +33,15 @@
 (package! blacken)
 (package! python-black) ;; blacken autopep
 (package! elpy)
+(package! ox-pandoc)
+(package! org-roam)
+(package! org-roam-server)
+(package! org-roam-bibtex)
+(package! helm-bibtex)
+(package! helm)
+(package! org-ref)
+(package! org-noter)
+(package! sqlite)
 
 
 
