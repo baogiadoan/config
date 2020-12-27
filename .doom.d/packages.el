@@ -42,6 +42,7 @@
 (package! org-ref)
 (package! org-noter)
 (package! sqlite)
+(package! company-org-roam)
 
 
 

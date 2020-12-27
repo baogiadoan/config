@@ -776,9 +776,9 @@
 
 ;; BUG this is the bug from the package, wait for the solution later
 ;; Allows you to edit entries directly from org-brain-visualize
-(use-package polymode
-  :config
-  (add-hook 'org-brain-visualize-mode-hook #'org-brain-polymode))
+;; (use-package polymode
+;;   :config
+;;   (add-hook 'org-brain-visualize-mode-hook #'org-brain-polymode))
 
 
 ;; org-mind-map config
@@ -883,6 +883,16 @@
 (setq org-read-date-prefer-future 'time)
 (setq mu4e-index-update-error-warning nil)
 
+
+
+;; variables for org-roam
+(setq
+   org_notes (concat (getenv "HOME") "/ownCloud/org/bibtex/notes/")
+   deft-directory org_notes
+   org-roam-directory org_notes
+   )
+
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; helm-bibtex set-up (need to set-up Mendeley to store to the following location
 ;; pdf stored to this location
@@ -892,23 +902,135 @@
 (setq bibtex-completion-bibliography '("~/ownCloud/org/bibtex/library.bib"))
 ;; this enable helm-bibtex to know where is the location of the pdf file corresponding to the bibtex
 (setq bibtex-completion-pdf-field "File")
-(setq bibtex-completion-notes-path "~/ownCloud/org/bibtex/notes.org")
+(setq bibtex-completion-notes-path "~/ownCloud/org/bibtex/notes")
 (setq bibtex-completion-pdf-symbol "⌘")
 (setq bibtex-completion-notes-symbol "✎")
+(setq bibtex-completion-notes-template-multiple-files
+ (concat
+  "#+TITLE: ${title}\n"
+  "#+ROAM_KEY: cite:${=key=}\n"
+  "* TODO Notes\n"
+  ":PROPERTIES:\n"
+  ":Custom_ID: ${=key=}\n"
+  ":NOTER_DOCUMENT: %(orb-process-file-field \"${=key=}\")\n"
+  ":AUTHOR: ${author-abbrev}\n"
+  ":JOURNAL: ${journaltitle}\n"
+  ":DATE: ${date}\n"
+  ":YEAR: ${year}\n"
+  ":DOI: ${doi}\n"
+  ":URL: ${url}\n"
+  ":END:\n\n"
+  ))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; set up for org-ref
-(require 'org-ref)
-(setq reftex-default-bibliography '("~/ownCloud/org/bibtex/library.bib"))
-(setq org-ref-bibliography-notes "~/ownCloud/org/bibtex/notes.org"
-      org-ref-default-bibliography '("~/ownCloud/org/bibtex/library.bib")
-      org-ref-pdf-directory "~/ownCloud/org/bibtex/pdfs/")
+;; (require 'org-ref)
+;; (setq reftex-default-bibliography '("~/ownCloud/org/roam/library.bib"))
+;; (setq
+;;   org-ref-bibliography-notes "~/ownCloud/org/roam/notes/"
+;;   org-ref-default-bibliography '("~/ownCloud/org/roam/library.bib")
+;;   org-ref-pdf-directory "~/ownCloud/org/roam/pdfs/")
+
+(use-package! org-ref
+    :config
+    (setq
+         org-ref-completion-library 'org-ref-ivy-cite
+         org-ref-get-pdf-filename-function 'org-ref-get-pdf-filename-helm-bibtex
+         org-ref-default-bibliography (list "~/ownCloud/org/bibtex/library.bib")
+         org-ref-bibliography-notes "~/ownCloud/org/bibtex/notes/bibnotes.org"
+         org-ref-note-title-format "* TODO %y - %t\n :PROPERTIES:\n  :Custom_ID: %k\n  :NOTER_DOCUMENT: %F\n :ROAM_KEY: cite:%k\n  :AUTHOR: %9a\n  :JOURNAL: %j\n  :YEAR: %y\n  :VOLUME: %v\n  :PAGES: %p\n  :DOI: %D\n  :URL: %U\n :END:\n\n"
+         org-ref-notes-directory "~/ownCloud/org/bibtex/notes/"
+         org-ref-notes-function 'orb-edit-notes
+    ))
 (setq org-latex-pdf-process (list "latexmk -shell-escape -bibtex -f -pdf %f"))
 
-;; set-up org-roam
 (use-package! org-roam
-      :ensure t
-      :hook
-      (after-init . org-roam-mode)
-      :custom
-      (org-roam-directory "~/ownCloud/org/roam"))
+  :hook (org-load . org-roam-mode)
+  :commands (org-roam-buffer-toggle-display
+             org-roam-find-file
+             org-roam-graph
+             org-roam-insert
+             org-roam-switch-to-buffer
+             org-roam-dailies-date
+             org-roam-dailies-today
+             org-roam-dailies-tomorrow
+             org-roam-dailies-yesterday)
+  :preface
+  ;; Set this to nil so we can later detect whether the user has set a custom
+  ;; directory for it, and default to `org-directory' if they haven't.
+  (defvar org-roam-directory nil)
+  :init
+  :config
+  (setq org-roam-directory "~/ownCloud/org/bibtex/notes/")
+  (setq
+        org-roam-directory (expand-file-name (or org-roam-directory "roam")
+                                             org-directory)
+        org-roam-verbose nil  ; https://youtu.be/fn4jIlFwuLU
+        org-roam-buffer-no-delete-other-windows t ; make org-roam buffer sticky
+        org-roam-completion-system 'default
+)
+
+
+  ;; Hide the mode line in the org-roam buffer, since it serves no purpose. This
+  ;; makes it easier to distinguish among other org buffers.
+  (add-hook 'org-roam-buffer-prepare-hook #'hide-mode-line-mode))
+
+
+;; Since the org module lazy loads org-protocol (waits until an org URL is
+;; detected), we can safely chain `org-roam-protocol' to it.
+(use-package org-roam-protocol
+  :after org-protocol)
+
+
+(use-package company-org-roam
+  :after org-roam
+  :config
+  (set-company-backend! 'org-mode '(company-org-roam company-yasnippet company-dabbrev)))
+
+
+
+;; ;; set-up org-roam
+;; (use-package! org-roam
+;;       :ensure t
+;;       :hook
+;;       (after-init . org-roam-mode)
+;;       :custom
+      ;; (org-roam-directory "~/ownCloud/org/roam"))
 (setq org-roam-db-update-method 'immediate)
+
+
+;; org-roam-bibtex
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+ (use-package org-roam-bibtex
+  :after (org-roam)
+  :hook (org-roam-mode . org-roam-bibtex-mode)
+  :config
+  (setq org-roam-bibtex-preformat-keywords
+   '("=key=" "title" "url" "file" "author-or-editor" "keywords"))
+  (setq orb-templates
+        '(("r" "ref" plain (function org-roam-capture--get-point)
+           ""
+           :file-name "${slug}"
+           :head "#+TITLE: ${=key=}: ${title}\n#+ROAM_KEY: ${ref}
+
+- tags ::
+- keywords :: ${keywords}
+
+\n* ${title}\n  :PROPERTIES:\n  :Custom_ID: ${=key=}\n  :URL: ${url}\n  :AUTHOR: ${author-or-editor}\n  :NOTER_DOCUMENT: %(orb-process-file-field \"${=key=}\")\n  :NOTER_PAGE: \n  :END:\n\n"
+
+           :unnarrowed t))))
+
+;; org-noter set-up
+(use-package! org-noter
+  :after (:any org pdf-view)
+  :config
+  (setq
+   ;; The WM can handle splits
+   org-noter-notes-window-location 'other-frame
+   ;; Please stop opening frames
+   org-noter-always-create-frame nil
+   ;; I want to see the whole file
+   org-noter-hide-other nil
+   ;; Everything is relative to the main notes file
+   org-noter-notes-search-path (list org_notes)
+   )
+  )
