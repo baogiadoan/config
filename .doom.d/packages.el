@@ -43,6 +43,9 @@
 (package! org-noter)
 (package! sqlite)
 (package! company-org-roam)
+(package! org-noter-pdftools)
+(package! pdf-tools)
+(package! org-roam-server)
 
 
 

@@ -1034,3 +1034,243 @@
    org-noter-notes-search-path (list org_notes)
    )
   )
+
+;; this is to fix the Emacs not using pdf-tools
+;; (use-package pdf-tools
+;;    :pin manual
+;;    :config
+;;    (pdf-tools-install)
+;;    (setq-default pdf-view-display-size 'fit-width)
+;;    (define-key pdf-view-mode-map (kbd "C-s") 'isearch-forward)
+;;    :custom
+;;    (pdf-annot-activate-created-annotations t "automatically annotate highlights"))
+;; (setq TeX-view-program-selection '((output-pdf "PDF Tools"))
+;;       TeX-view-program-list '(("PDF Tools" TeX-pdf-tools-sync-view))
+;;       TeX-source-correlate-start-server t)
+
+;; (add-hook 'TeX-after-compilation-finished-functions
+;;           #'TeX-revert-document-buffer)
+
+
+;; copy from zaeph config for pdf annotations
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(use-package pdf-tools
+  ;; :magic ("%PDF" . pdf-view-mode)
+  :demand
+  :config
+  (pdf-tools-install :no-query))
+
+(use-package pdf-view
+  :config
+  (defvar zp/pdf-annot-default-annotation-color "#F1F23B"
+    "Default color to use for annotations.")
+
+  (setq zp/pdf-annot-default-annotation-color "#F1F23B")
+
+  (setq pdf-annot-default-annotation-properties
+        `((t (label . ,user-full-name))
+          (text (icon . "Note") (color . ,zp/pdf-annot-default-annotation-color))
+          (highlight (color . "#FFFF4D")) ;Lighter yellow
+          (squiggly (color . "orange"))
+          (strike-out (color . "red"))
+          (underline (color . "blue"))))
+
+  (defun zp/toggle-pdf-view-auto-slice-minor-mode ()
+    "Toggle ‘pdf-view-auto-slice-minor-mode’ and reset slice."
+    (interactive)
+    (call-interactively 'pdf-view-auto-slice-minor-mode)
+    (if (not pdf-view-auto-slice-minor-mode)
+        (progn
+          (pdf-view-reset-slice))))
+
+  ;; Disable continuous view in pdf-view
+  ;; I prefer to explicitly turn pages
+  (setq pdf-view-continuous nil)
+
+  ;; Automatically activate annotation when they’re created
+  (setq pdf-annot-activate-created-annotations t)
+
+  (defvar zp/pdf-view-save-after-annotation nil
+    "When non-nil, save the PDF after an annotation is created.")
+
+  ;; Save after creating an annotation
+  (defun zp/pdf-view-save-buffer ()
+    "Save buffer and preserve midnight state."
+    (interactive)
+    (call-interactively #'save-buffer)
+    (pdf-view-midnight-minor-mode 'toggle)
+    (pdf-view-midnight-minor-mode 'toggle))
+
+  (defun zp/pdf-view-save-buffer-maybe ()
+    "Save buffer and preserve midnight state."
+    (when zp/pdf-view-save-after-annotation
+      (zp/pdf-view-save-buffer)))
+
+  (advice-add 'pdf-annot-edit-contents-commit :after 'zp/pdf-view-save-buffer-maybe)
+
+  (defun zp/pdf-view-continuous-toggle ()
+    (interactive)
+    (cond ((not pdf-view-continuous)
+           (setq pdf-view-continuous t)
+           (message "Page scrolling: Continous"))
+          (t
+           (setq pdf-view-continuous nil)
+           (message "Page scrolling: Constrained"))))
+
+  (defun zp/pdf-view-open-in-evince ()
+    "Open the current PDF with ‘evince’."
+    (interactive)
+    (save-window-excursion
+      (let ((current-file (buffer-file-name))
+            (current-page (number-to-string (pdf-view-current-page))))
+        (async-shell-command
+         (format "evince -i %s \"%s\"" current-page current-file))))
+    (message "Sent to Evince"))
+
+  ;; xournalpp is the hand-writing note-taking app
+  (defun zp/pdf-view-open-in-xournalpp ()
+    "Open the current PDF with ‘xournalpp’."
+    (interactive)
+    (save-window-excursion
+      (let ((current-file (buffer-file-name)))
+        (async-shell-command
+         (format "xournalpp \"%s\"" current-file))))
+    (message "Sent to Xournal++"))
+
+  (defun zp/pdf-view-show-current-page ()
+    "Show the current page."
+    (interactive)
+    (message "Page: %s" (pdf-view-current-page)))
+  ;;--------------------
+  ;; Custom annotations
+  ;;--------------------
+
+  (defun zp/pdf-annot-add-custom-annotation (type color &optional icon)
+    "Add custom annotation with ICON and COLOR."
+    (let* ((icon (or icon "Note"))
+           (color (or color zp/pdf-annot-default-annotation-color))
+           (pdf-annot-default-annotation-properties
+            `((t (label . ,user-full-name))
+              ,(pcase type
+                 ('text `(text (icon . ,icon) (color . ,color)))
+                 ('highlight `(highlight (color . ,color)))))))
+      (call-interactively (pcase type
+                            ('text #'pdf-annot-add-text-annotation)
+                            ('highlight #'pdf-annot-add-highlight-markup-annotation)))))
+
+  (defvar zp/pdf-custom-annot-list nil
+    "List of custom annotations and their settings.
+Each element in list must be a list with the following elements:
+- Name of the function to create
+- Key binding
+- Name of the icon to use
+- Color to use")
+
+  (defun zp/pdf-custom-annot-init ()
+    (seq-do
+     (lambda (settings)
+       (cl-destructuring-bind (name type key icon color) settings
+         (let* ((root "zp/pdf-annot-add-text-annotation-")
+                (fun (intern (concat root name))))
+           (defalias fun
+             `(lambda ()
+                (interactive)
+                (zp/pdf-annot-add-custom-annotation ,type ,color ,icon))
+             (format "Insert a note of type ‘%s’." name))
+           (when key
+             (define-key pdf-view-mode-map
+               (kbd key)
+               `,fun)))))
+     zp/pdf-custom-annot-list))
+  (define-prefix-command 'zp/pdf-custom-annot-map)
+
+  (define-key pdf-view-mode-map "a" 'zp/pdf-custom-annot-map)
+
+  (setq zp/pdf-custom-annot-list
+        `(("note" 'text "t" "Note" ,zp/pdf-annot-default-annotation-color)
+          ("note-blue" 'text "T" "Note" "#389BE6")
+          ("insert" 'text "ai" "Insert" "#913BF2")
+          ("comment" 'text "c" "Comment" "#389BE6")
+          ("comment-red" 'text "ac" "Comment" "#FF483E")
+          ("circle" 'text "ay" "Circle" "#38E691")
+          ("cross" 'text "an" "Cross" "#FF483E")
+
+          ("hl-red" 'highlight nil nil "#FF7F7F")
+          ("hl-blue" 'highlight nil nil "#7FDFFF")
+          ("hl-green" 'highlight nil nil "#7FFF7F")
+          ("hl-purple" 'highlight nil nil "#967FFF")
+          ("hl-orange" 'highlight nil nil "#FFBF7F")))
+
+  (setq pdf-annot-color-history
+        '("#FFFF4D" "#FF7F7F" "#7FDFFF" "#7FFF7F" "#967FFF" "#FFBF7F"))
+
+  (defun zp/pdf-annot-add-highlight-markup-annotation (arg &optional activate)
+    "Add highlight markup annotation.
+This wrapper includes presets which can be accessed with
+numerical arguments."
+    (interactive "P")
+    (let ((pdf-annot-activate-created-annotations (when activate t)))
+      (pcase arg
+        (1 (zp/pdf-annot-add-text-annotation-hl-red))
+        (2 (zp/pdf-annot-add-text-annotation-hl-blue))
+        (3 (zp/pdf-annot-add-text-annotation-hl-green))
+        (4 (zp/pdf-annot-add-text-annotation-hl-purple))
+        (5 (zp/pdf-annot-add-text-annotation-hl-orange))
+        (_ (call-interactively #'pdf-annot-add-highlight-markup-annotation))))
+    (unless activate
+      (zp/pdf-view-save-buffer-maybe)))
+
+  (defun zp/pdf-annot-add-highlight-markup-annotation-and-activate (arg)
+    "Add highlight markup annotation and activate it.
+This wrapper includes presets which can be accessed with
+numerical arguments."
+    (interactive "P")
+    (zp/pdf-annot-add-highlight-markup-annotation arg t))
+
+  (zp/pdf-custom-annot-init)
+
+  ;;----------
+  ;; Bindings
+  ;;----------
+
+  ;; Use normal isearch
+  (define-key pdf-view-mode-map (kbd "C-s") 'isearch-forward)
+  (define-key pdf-view-mode-map (kbd "C-r") 'isearch-backward)
+
+  (define-key pdf-view-mode-map (kbd "C-x C-s") 'zp/pdf-view-save-buffer)
+
+  (define-key pdf-view-mode-map (kbd "m") 'pdf-view-midnight-minor-mode)
+  (define-key pdf-view-mode-map (kbd "P") 'pdf-view-printer-minor-mode)
+  (define-key pdf-view-mode-map (kbd "s") 'zp/toggle-pdf-view-auto-slice-minor-mode)
+  (define-key pdf-view-mode-map (kbd "M") 'pdf-view-set-slice-using-mouse)
+  (define-key pdf-view-mode-map (kbd "C") 'zp/pdf-view-continuous-toggle)
+  (define-key pdf-view-mode-map (kbd "w") 'pdf-view-fit-width-to-window)
+  (define-key pdf-view-mode-map (kbd "f") 'pdf-view-fit-height-to-window)
+  (define-key pdf-view-mode-map (kbd "RET") 'zp/pdf-view-open-in-evince)
+  (define-key pdf-view-mode-map [(shift return)] 'zp/pdf-view-open-in-xournalpp)
+  (define-key pdf-view-mode-map (kbd ".") 'zp/pdf-view-show-current-page)
+  (define-key pdf-view-mode-map (kbd "t") 'pdf-annot-add-text-annotation)
+  (define-key pdf-view-mode-map (kbd "h") 'zp/pdf-annot-add-highlight-markup-annotation)
+  (define-key pdf-view-mode-map (kbd "H") 'zp/pdf-annot-add-highlight-markup-annotation-and-activate)
+  (define-key pdf-view-mode-map (kbd "l") 'pdf-annot-list-annotations)
+  (define-key pdf-view-mode-map (kbd "D") 'pdf-annot-delete)
+  (define-key pdf-view-mode-map (kbd "O") 'org-noter-create-skeleton)
+
+  (define-prefix-command 'slice-map)
+  (define-key pdf-view-mode-map (kbd "S") 'slice-map)
+  (define-key pdf-view-mode-map (kbd "S b") 'pdf-view-set-slice-from-bounding-box)
+  (define-key pdf-view-mode-map (kbd "S m") 'pdf-view-set-slice-using-mouse)
+  (define-key pdf-view-mode-map (kbd "S r") 'pdf-view-reset-slice)
+
+  (add-hook 'pdf-view-mode-hook #'pdf-view-midnight-minor-mode))
+
+(use-package! pdf-annot
+  :config
+  (define-key pdf-annot-edit-contents-minor-mode-map (kbd "C-c C-k") 'pdf-annot-edit-contents-abort))
+
+(use-package! pdf-links
+  :config
+  (define-key pdf-links-minor-mode-map (kbd "f") 'pdf-view-fit-page-to-window))
+
+;; my config to disable evil-mode in pdfviewers
+;; (evil-set-initial-state 'pdf-view-mode 'emacs)
