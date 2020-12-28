@@ -55,6 +55,11 @@
 (global-set-key (kbd "C-c C-x i") 'org-insert-columns-dblock)
 (global-set-key (kbd "C-c d") 'org-decrypt-entry)
 (global-set-key (kbd "C-c e") 'org-encrypt-entry)
+
+
+;; some defined key
+(global-set-key (kbd "C-c N") 'org-noter)
+(global-set-key (kbd "C-c m") 'mu4e)
 ;; yay, it worked
 
 ;; (map! :leader

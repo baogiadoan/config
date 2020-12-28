@@ -54,13 +54,8 @@
   (setq doom-one-brighter-comments t)
   (setq doom-one-comment-bg nil)
 
-;; set up org-crypt
-(require 'org-crypt)
-(org-crypt-use-before-save-magic)
-(setq org-tags-exclude-from-inheritance (quote ("crypt")))
 ;; GPG key to use for encryption
 ;; Either the Key ID or set to nil to use symmetric encryption.
-(setq org-crypt-key nil)
 
 ;; change the color of the comments to cyan
 ;; (custom-set-faces
@@ -84,6 +79,12 @@
   ;; (setq org-log-done 'note) ;; log the time and give a NOTE after done the task
   ;; this is no need as I added @ after each keyword to take notes for every state change.
 
+  ;; set up org-crypt
+  (require 'org-crypt)
+    ;; (add-hook 'before-save-hook #'org-crypt-use-before-save-magic)
+    (org-crypt-use-before-save-magic)
+    (setq org-tags-exclude-from-inheritance '("crypt"))
+    (setq org-crypt-key nil)
 
   ;; set tags
   ; Tags with fast selection keys
