@@ -46,6 +46,7 @@
 (package! org-noter-pdftools)
 (package! pdf-tools)
 (package! org-roam-server)
+(package! beacon)
 
 
 

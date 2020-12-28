@@ -37,7 +37,16 @@
         (load-theme 'nord t))))
 
 ;; (add-hook 'after-make-frame-functions #'reload-theme)
-
+;; set the beacon mode on everywhere
+(use-package! beacon
+  :custom
+  (beacon-push-mark 10)
+  (beacon-color "#cc342b")
+  (beacon-blink-delay 0.3)
+  (beacon-blink-duration 0.3)
+  :config
+  (beacon-mode)
+  (global-hl-line-mode 1))
 
 (require 'doom-themes)
   (setq doom-theme 'doom-dracula)
@@ -1019,21 +1028,8 @@
 
            :unnarrowed t))))
 
-;; org-noter set-up
-(use-package! org-noter
-  :after (:any org pdf-view)
-  :config
-  (setq
-   ;; The WM can handle splits
-   org-noter-notes-window-location 'other-frame
-   ;; Please stop opening frames
-   org-noter-always-create-frame nil
-   ;; I want to see the whole file
-   org-noter-hide-other nil
-   ;; Everything is relative to the main notes file
-   org-noter-notes-search-path (list org_notes)
-   )
-  )
+
+
 
 ;; this is to fix the Emacs not using pdf-tools
 ;; (use-package pdf-tools
@@ -1054,13 +1050,19 @@
 
 ;; copy from zaeph config for pdf annotations
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(use-package pdf-tools
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+
+
+(use-package! pdf-tools
   ;; :magic ("%PDF" . pdf-view-mode)
   :demand
   :config
   (pdf-tools-install :no-query))
 
-(use-package pdf-view
+(use-package! pdf-view
   :config
   (defvar zp/pdf-annot-default-annotation-color "#F1F23B"
     "Default color to use for annotations.")
@@ -1273,4 +1275,118 @@ numerical arguments."
   (define-key pdf-links-minor-mode-map (kbd "f") 'pdf-view-fit-page-to-window))
 
 ;; my config to disable evil-mode in pdfviewers
-;; (evil-set-initial-state 'pdf-view-mode 'emacs)
+(evil-set-initial-state 'pdf-view-mode 'emacs)
+
+;;----------------------------------------------------------------------------
+;; org-noter
+;;----------------------------------------------------------------------------
+
+
+;; ;; org-noter set-up
+;; (use-package! org-noter
+;;   :after (:any org pdf-view)
+;;   :config
+;;   (setq
+;;    ;; The WM can handle splits
+;;    org-noter-notes-window-location 'other-frame
+;;    ;; Please stop opening frames
+;;    org-noter-always-create-frame nil
+;;    ;; I want to see the whole file
+;;    org-noter-hide-other nil
+;;    ;; Everything is relative to the main notes file
+;;    org-noter-notes-search-path (list org_notes)
+;;    )
+;;   )
+
+
+(use-package! org-noter
+  :after (:any org pdf-view)
+  :bind (:map org-mode-map
+         (("C-c N" . zp/org-noter-dwim))
+         :map org-noter-doc-mode-map
+         (("M-i" . zp/org-noter-insert-precise-note-dwim)))
+  :config
+
+  (setq org-noter-hide-other t
+        org-noter-auto-save-last-location t
+        org-noter-notes-window-location 'other-frame
+        org-noter-always-create-frame nil
+        ;; relative to the pdf file
+        org-noter-notes-search-path (list org_notes)
+        org-noter-hide-other nil
+        org-noter-doc-split-fraction '(0.57 0.43))
+
+  (defun zp/org-noter-visual-line-mode ()
+    "Enable visual-line-mode in ‘org-noter’ notes.
+Workaround to counter race conditions with the margins."
+    (let ((parent (current-buffer))
+          (refresh (lambda (parent)
+                     (with-current-buffer parent
+                       (visual-line-mode 'toggle)
+                       (visual-line-mode 'toggle)))))
+      (run-at-time "1 sec" nil refresh parent)
+      (run-at-time "5 sec" nil refresh parent)))
+
+  (add-hook 'org-noter-notes-mode-hook #'zp/org-noter-visual-line-mode)
+
+  ;; Fix for hiding truncation
+  (defun org-noter--set-notes-scroll (_window &rest _ignored)
+    nil)
+
+  ;; Fix for visual-line-mode with PDF files
+  (defun org-noter--note-after-tipping-point (_point _note-property _view)
+    nil)
+
+  (defun zp/org-noter-indirect (arg)
+    "Ensure that org-noter starts in an indirect buffer.
+Without this wrapper, org-noter creates a direct buffer
+restricted to the notes, but this causes problems with the refile
+system.  Namely, the notes buffer gets identified as an
+agenda-files buffer.
+This wrapper addresses it by having org-noter act on an indirect
+buffer, thereby propagating the indirectness."
+    (interactive "P")
+    (if (org-entry-get nil org-noter-property-doc-file)
+        (with-selected-window (zp/org-tree-to-indirect-buffer-folded nil t)
+          (org-noter arg)
+          (kill-buffer))
+      (org-noter arg)))
+
+  (defun zp/org-noter-dwim (arg)
+    "Run org-noter on the current tree, even if we’re in the agenda."
+    (interactive "P")
+    (let ((in-agenda (derived-mode-p 'org-agenda-mode))
+          (marker))
+      (cond (in-agenda
+             (setq marker (get-text-property (point) 'org-marker))
+             (with-current-buffer (marker-buffer marker)
+               (goto-char marker)
+               (unless (org-entry-get nil org-noter-property-doc-file)
+                 (user-error "No org-noter info on this tree"))
+               (zp/org-noter-indirect arg)))
+            (t
+             (zp/org-noter-indirect arg)
+             (setq marker (point-marker))))
+      (org-with-point-at marker
+        (let ((tags (org-get-tags)))
+          (when (and (org-entry-get nil org-noter-property-doc-file)
+                     (not (member "noter" tags)))
+            (org-set-tags (push "noter" tags)))))
+      (unless in-agenda
+        (set-marker marker nil))))
+
+  (defun zp/org-noter-insert-precise-note-dwim (force-mouse)
+    "Insert note associated with a specific location.
+If in nov-mode, use point rather than the mouse to target the
+position."
+    (interactive "P")
+    (if (and (derived-mode-p 'nov-mode)
+             (not force-mouse))
+        (let ((pos (if (region-active-p)
+                       (min (region-beginning) (point))
+                     (point))))
+          (org-noter-insert-note pos))
+      (org-noter-insert-precise-note)))
+
+  (define-key org-noter-doc-mode-map (kbd "j") 'pdf-view-next-line-or-next-page)
+  (define-key org-noter-doc-mode-map (kbd "k") 'pdf-view-previous-line-or-previous-page))
