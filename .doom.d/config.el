@@ -493,9 +493,9 @@
 ;; only my Macbook requires this
 ;; (add-to-list 'load-path "/usr/local/share/emacs/site-lisp/mu/mu4e")
 ;; this is for my PC at work
-;; (add-to-list 'load-path "/usr/local/share/emacs/site-lisp/mu4e/")
+(add-to-list 'load-path "/usr/local/share/emacs/site-lisp/mu4e/")
 ;; this is PC at home
-(add-to-list 'load-path "/usr/share/emacs/site-lisp/mu4e/")
+;; (add-to-list 'load-path "/usr/share/emacs/site-lisp/mu4e/")
 (require 'mu4e)
 ;; use mu4e for e-mail in emacs
 (setq mail-user-agent 'mu4e-user-agent)
@@ -1053,7 +1053,7 @@
    `(("r" "ref" plain
       (function org-roam-capture--get-point)
       ""
-      :file-name "refs/${citekey}"
+      :file-name "${citekey}"
       :head ,(s-join "\n"
                      (list
                       (concat "#+title: "
@@ -1066,7 +1066,7 @@
      ("n" "ref + noter" plain
       (function org-roam-capture--get-point)
       ""
-      :file-name "refs/${citekey}"
+      :file-name "${citekey}"
       :head ,(s-join "\n"
                      (list
                       (concat "#+title: "
