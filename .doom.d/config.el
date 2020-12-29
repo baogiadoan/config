@@ -10,6 +10,7 @@
       user-mail-address "bao.doan@adelaide.edu.au")
 ;; my configuration here
 (setq projectile-project-search-path '("~/code/"))
+(load! "+zp-org")
 ;;
 ;;
 ;; Doom exposes five (optional) variables for controlling fonts in Doom. Here
@@ -22,8 +23,8 @@
 ;;
 ;; They all accept either a font-spec, font string ("Input Mono-12"), or xlfd
 ;; font string. You generally only need these two:
-;; (setq doom-font (font-spec :family "monospace" :size 12 :weight 'semi-light)
-      ;; doom-variable-pitch-font (font-spec :family "sans" :size 13))
+(setq doom-font (font-spec :family "monospace" :size 12 :weight 'semi-light)
+      doom-variable-pitch-font (font-spec :family "sans" :size 13))
 
 ;; There are two ways to load a theme. Both assume the theme is installed and
 ;; available. You can either set `doom-theme' or manually load a theme with the
@@ -932,7 +933,8 @@
   ":DOI: ${doi}\n"
   ":URL: ${url}\n"
   ":END:\n\n"
-  ))
+  )
+ )
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; set up for org-ref
 ;; (require 'org-ref)
@@ -989,7 +991,7 @@
 
 ;; Since the org module lazy loads org-protocol (waits until an org URL is
 ;; detected), we can safely chain `org-roam-protocol' to it.
-(use-package org-roam-protocol
+(use-package! org-roam-protocol
   :after org-protocol)
 
 
@@ -1012,27 +1014,71 @@
 
 ;; org-roam-bibtex
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
- (use-package org-roam-bibtex
-  :after (org-roam)
+ ;; (use-package org-roam-bibtex
+;;   :after (org-roam)
+;;   :hook (org-roam-mode . org-roam-bibtex-mode)
+;;   :config
+;;   (setq org-roam-bibtex-preformat-keywords
+;;    '("=key=" "title" "url" "file" "author-or-editor" "keywords"))
+;;   (setq orb-templates
+;;         '(("r" "ref" plain (function org-roam-capture--get-point)
+;;            ""
+;;            :file-name "${slug}"
+;;            :head "#+TITLE: ${=key=}: ${title}\n#+ROAM_KEY: ${ref}
+
+;; - tags ::
+;; - keywords :: ${keywords}
+
+;; \n* ${title}\n  :PROPERTIES:\n  :Custom_ID: ${=key=}\n  :URL: ${url}\n  :AUTHOR: ${author-or-editor}\n  :NOTER_DOCUMENT: %(orb-process-file-field \"${=key=}\")\n  :NOTER_PAGE: \n  :END:\n\n"
+
+;;            :unnarrowed t))))
+
+
+(defvar orb-title-format "${author-or-editor-abbrev} (${date}).  ${title}."
+  "Format of the title to use for `orb-templates'.")
+
+(use-package! org-roam-bibtex
+  :requires bibtex-completion
   :hook (org-roam-mode . org-roam-bibtex-mode)
-  :config
-  (setq org-roam-bibtex-preformat-keywords
-   '("=key=" "title" "url" "file" "author-or-editor" "keywords"))
-  (setq orb-templates
-        '(("r" "ref" plain (function org-roam-capture--get-point)
-           ""
-           :file-name "${slug}"
-           :head "#+TITLE: ${=key=}: ${title}\n#+ROAM_KEY: ${ref}
+  ;; :load-path "~/projects/org-roam-bibtex/"
+  :bind (:map org-roam-bibtex-mode-map
+         (("C-c n f" . orb-find-non-ref-file))
+         :map org-mode-map
+         (("C-c n t" . orb-insert-non-ref)
+          ("C-c n a" . orb-note-actions)))
+  :init
+  :custom
+  (orb-autokey-format "%a%y")
+  (orb-templates
+   `(("r" "ref" plain
+      (function org-roam-capture--get-point)
+      ""
+      :file-name "refs/${citekey}"
+      :head ,(s-join "\n"
+                     (list
+                      (concat "#+title: "
+                              orb-title-format)
+                      "#+roam_key: ${ref}"
+                      "#+created: %U"
+                      "#+last_modified: %U\n\n"))
+      :unnarrowed t)
 
-- tags ::
-- keywords :: ${keywords}
-
-\n* ${title}\n  :PROPERTIES:\n  :Custom_ID: ${=key=}\n  :URL: ${url}\n  :AUTHOR: ${author-or-editor}\n  :NOTER_DOCUMENT: %(orb-process-file-field \"${=key=}\")\n  :NOTER_PAGE: \n  :END:\n\n"
-
-           :unnarrowed t))))
-
-
-
+     ("n" "ref + noter" plain
+      (function org-roam-capture--get-point)
+      ""
+      :file-name "refs/${citekey}"
+      :head ,(s-join "\n"
+                     (list
+                      (concat "#+title: "
+                              orb-title-format)
+                      "#+roam_key: ${ref}"
+                      "#+roam_tags: ${=tags=}"
+                      ""
+                      "* Notes :noter:"
+                      ":PROPERTIES:"
+                      ":NOTER_DOCUMENT: %(orb-process-file-field \"${citekey}\")"
+                      ":NOTER_PAGE:"
+                      ":END:"))))))
 
 ;; this is to fix the Emacs not using pdf-tools
 ;; (use-package pdf-tools
@@ -1285,23 +1331,6 @@ numerical arguments."
 ;;----------------------------------------------------------------------------
 
 
-;; ;; org-noter set-up
-;; (use-package! org-noter
-;;   :after (:any org pdf-view)
-;;   :config
-;;   (setq
-;;    ;; The WM can handle splits
-;;    org-noter-notes-window-location 'other-frame
-;;    ;; Please stop opening frames
-;;    org-noter-always-create-frame nil
-;;    ;; I want to see the whole file
-;;    org-noter-hide-other nil
-;;    ;; Everything is relative to the main notes file
-;;    org-noter-notes-search-path (list org_notes)
-;;    )
-;;   )
-
-
 (use-package! org-noter
   :after (:any org pdf-view)
   :bind (:map org-mode-map
@@ -1393,3 +1422,35 @@ position."
 
   (define-key org-noter-doc-mode-map (kbd "j") 'pdf-view-next-line-or-next-page)
   (define-key org-noter-doc-mode-map (kbd "k") 'pdf-view-previous-line-or-previous-page))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; org-roam server
+(use-package! org-roam-server
+  :ensure t
+  :config
+  (setq org-roam-server-host "127.0.0.1"
+        org-roam-server-port 8080
+        org-roam-server-authenticate nil
+        org-roam-server-export-inline-images t
+        org-roam-server-serve-files nil
+        org-roam-server-served-file-extensions '("pdf" "mp4" "ogv")
+        org-roam-server-network-poll t
+        org-roam-server-network-arrows nil
+        org-roam-server-network-label-truncate t
+        org-roam-server-network-label-truncate-length 60
+        org-roam-server-network-label-wrap-length 20))
+
+(defun org-roam-server-open ()
+    "Ensure the server is active, then open the roam graph."
+    (interactive)
+    (smartparens-global-mode -1)
+    (org-roam-server-mode 1)
+    (browse-url-xdg-open (format "http://localhost:%d" org-roam-server-port))
+    (smartparens-global-mode 1))
+
+;; automatically enable server-mode
+(after! org-roam
+  (smartparens-global-mode -1)
+  (org-roam-server-mode)
+  (smartparens-global-mode 1))
