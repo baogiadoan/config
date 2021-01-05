@@ -497,7 +497,7 @@
 ;; this is for my PC at work
 ;; (add-to-list 'load-path "/usr/local/share/emacs/site-lisp/mu4e/")
 ;; this is PC at home
-;; (add-to-list 'load-path "/usr/share/emacs/site-lisp/mu4e/")
+(add-to-list 'load-path "/usr/share/emacs/site-lisp/mu4e/")
 (require 'mu4e)
 ;; use mu4e for e-mail in emacs
 (setq mail-user-agent 'mu4e-user-agent)
@@ -662,9 +662,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;;archive the DONE task
-;; (defun my-org-archive-done-tasks ()
-;;   (interactive)
-;;   (org-map-entries 'org-archive-subtree "/DONE" 'file));
 ;; (defun org-archive-done-tasks ()
 ;;   (interactive)
 ;;   (org-map-entries
@@ -684,7 +681,18 @@
    (lambda ()
      (org-archive-subtree)
      (setq org-map-continue-from (org-element-property :begin (org-element-at-point))))
-   "/DONE" 'tree))
+   "/DONE" 'tree)
+  (org-map-entries
+   (lambda ()
+     (org-archive-subtree)
+     (setq org-map-continue-from (org-element-property :begin (org-element-at-point))))
+   "/KILL" 'tree)
+  (org-map-entries
+   (lambda ()
+     (org-archive-subtree)
+     (setq org-map-continue-from (org-element-property :begin (org-element-at-point))))
+   "/CANCELLED" 'tree)
+  )
 
 
 ;; mu4e-alert
