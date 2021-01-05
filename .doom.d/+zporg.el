@@ -439,9 +439,7 @@ it should be an outline path OLP."
              (set-marker marker nil)
              t))))
 
-;;----------------------------------------------------------------------------
-;; Custom exported timestamp
-;;----------------------------------------------------------------------------
+
 (defun endless/filter-timestamp (trans back _comm)
   "Remove <> around time-stamps."
   (pcase back

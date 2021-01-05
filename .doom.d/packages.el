@@ -14,7 +14,7 @@
 (package! org-journal)
 (package! evil-snipe)
 (package! avy)
-(package! mu4e)
+;; (package! mu4e)
 (package! mu4e-alert)
 (package! org-super-agenda)
 (package! conda)
@@ -47,6 +47,7 @@
 (package! pdf-tools)
 (package! org-roam-server)
 (package! beacon)
+(package! bibtex-completion)
 
 
 

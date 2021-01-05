@@ -10,7 +10,6 @@
       user-mail-address "bao.doan@adelaide.edu.au")
 ;; my configuration here
 (setq projectile-project-search-path '("~/code/"))
-(load! "+zp-org")
 ;;
 ;;
 ;; Doom exposes five (optional) variables for controlling fonts in Doom. Here
@@ -154,15 +153,17 @@
         ; set org-modules for habit
         (setq org-modules '(org-habit))
 
-
   (setq org-agenda-custom-commands
         '(("c" "Super view"
-           ((agenda "" (
+           (
+            (agenda "" (
                         (org-agenda-overriding-header "")
                         (org-agenda-span 'day)
+                        (org-habit-show-habits-only-for-today t)
                         (org-super-agenda-groups
                          '((:name "Today"
                                   :time-grid t
+                                  :habit t
                                   ;; :scheduled today
                                   :date today
                                   :order 0)))))
@@ -488,12 +489,13 @@
 ;;
 ;; You can also try 'gd' (or 'C-c c d') to jump to their definition and see how
 ;; they are implemented.
-(load! "+bindings")
+(load! "+mybindings")
+(load! "+zporg")
 
 ;; only my Macbook requires this
 ;; (add-to-list 'load-path "/usr/local/share/emacs/site-lisp/mu/mu4e")
 ;; this is for my PC at work
-(add-to-list 'load-path "/usr/local/share/emacs/site-lisp/mu4e/")
+;; (add-to-list 'load-path "/usr/local/share/emacs/site-lisp/mu4e/")
 ;; this is PC at home
 ;; (add-to-list 'load-path "/usr/share/emacs/site-lisp/mu4e/")
 (require 'mu4e)
@@ -910,7 +912,10 @@
 ;; helm-bibtex set-up (need to set-up Mendeley to store to the following location
 ;; pdf stored to this location
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(setq bibtex-completion-library-path '("~/ownCloud/org/bibtex/pdfs"))
+;; bibtex-completion
+(use-package! bibtex-completion)
+
+(setq bibtex-completion-library-path '("~/ownCloud/org/bibtex"))
 ;; bibtex file stored to this location
 (setq bibtex-completion-bibliography '("~/ownCloud/org/bibtex/library.bib"))
 ;; this enable helm-bibtex to know where is the location of the pdf file corresponding to the bibtex
@@ -950,7 +955,7 @@
          org-ref-completion-library 'org-ref-ivy-cite
          org-ref-get-pdf-filename-function 'org-ref-get-pdf-filename-helm-bibtex
          org-ref-default-bibliography (list "~/ownCloud/org/bibtex/library.bib")
-         org-ref-bibliography-notes "~/ownCloud/org/bibtex/notes/bibnotes.org"
+         ;; org-ref-bibliography-notes "~/ownCloud/org/bibtex/notes/bibnotes.org"
          org-ref-note-title-format "* TODO %y - %t\n :PROPERTIES:\n  :Custom_ID: %k\n  :NOTER_DOCUMENT: %F\n :ROAM_KEY: cite:%k\n  :AUTHOR: %9a\n  :JOURNAL: %j\n  :YEAR: %y\n  :VOLUME: %v\n  :PAGES: %p\n  :DOI: %D\n  :URL: %U\n :END:\n\n"
          org-ref-notes-directory "~/ownCloud/org/bibtex/notes/"
          org-ref-notes-function 'orb-edit-notes
@@ -976,8 +981,8 @@
   :config
   (setq org-roam-directory "~/ownCloud/org/bibtex/notes/")
   (setq
-        org-roam-directory (expand-file-name (or org-roam-directory "roam")
-                                             org-directory)
+        ;; org-roam-directory (expand-file-name (or org-roam-directory "roam")
+        ;;                                      org-directory)
         org-roam-verbose nil  ; https://youtu.be/fn4jIlFwuLU
         org-roam-buffer-no-delete-other-windows t ; make org-roam buffer sticky
         org-roam-completion-system 'default
@@ -1038,64 +1043,36 @@
   "Format of the title to use for `orb-templates'.")
 
 (use-package! org-roam-bibtex
-  :requires bibtex-completion
-  :hook (org-roam-mode . org-roam-bibtex-mode)
+  :after org-roam
+  :hook (org-roam-mode . org-roam-bibtex-mode))
   ;; :load-path "~/projects/org-roam-bibtex/"
-  :bind (:map org-roam-bibtex-mode-map
-         (("C-c n f" . orb-find-non-ref-file))
-         :map org-mode-map
-         (("C-c n t" . orb-insert-non-ref)
-          ("C-c n a" . orb-note-actions)))
-  :init
-  :custom
-  (orb-autokey-format "%a%y")
-  (orb-templates
-   `(("r" "ref" plain
-      (function org-roam-capture--get-point)
-      ""
-      :file-name "${citekey}"
-      :head ,(s-join "\n"
-                     (list
-                      (concat "#+title: "
-                              orb-title-format)
-                      "#+roam_key: ${ref}"
-                      "#+created: %U"
-                      "#+last_modified: %U\n\n"))
-      :unnarrowed t)
+  ;; :bind (:map org-roam-bibtex-mode-map
+  ;;        (("C-c n f" . orb-find-non-ref-file))
+  ;;        :map org-mode-map
+  ;;        (("C-c n t" . orb-insert-non-ref)
+  ;;         ("C-c n a" . orb-note-actions)))
+(setq orb-preformat-keywords
+    '("citekey" "title" "url" "author-or-editor" "file")
+    orb-process-file-keyword t
+    orb-file-field-extensions '("pdf"))
 
-     ("n" "ref + noter" plain
-      (function org-roam-capture--get-point)
-      ""
-      :file-name "${citekey}"
-      :head ,(s-join "\n"
-                     (list
-                      (concat "#+title: "
-                              orb-title-format)
-                      "#+roam_key: ${ref}"
-                      "#+roam_tags: ${=tags=}"
-                      ""
-                      "* Notes :noter:"
-                      ":PROPERTIES:"
-                      ":NOTER_DOCUMENT: %(orb-process-file-field \"${citekey}\")"
-                      ":NOTER_PAGE:"
-                      ":END:"))))))
+(setq orb-templates
+    '(("r" "ref" plain (function org-roam-capture--get-point)
+       ""
+       :file-name "${citekey}"
+       :head "#+TITLE: ${citekey}: ${title}\n#+ROAM_KEY: ${ref}
 
-;; this is to fix the Emacs not using pdf-tools
-;; (use-package pdf-tools
-;;    :pin manual
-;;    :config
-;;    (pdf-tools-install)
-;;    (setq-default pdf-view-display-size 'fit-width)
-;;    (define-key pdf-view-mode-map (kbd "C-s") 'isearch-forward)
-;;    :custom
-;;    (pdf-annot-activate-created-annotations t "automatically annotate highlights"))
-;; (setq TeX-view-program-selection '((output-pdf "PDF Tools"))
-;;       TeX-view-program-list '(("PDF Tools" TeX-pdf-tools-sync-view))
-;;       TeX-source-correlate-start-server t)
+- tags ::
+- keywords :: ${keywords}
 
-;; (add-hook 'TeX-after-compilation-finished-functions
-;;           #'TeX-revert-document-buffer)
-
+* ${title}
+:PROPERTIES:
+:Custom_ID: ${citekey}
+:URL: ${url}
+:AUTHOR: ${author-or-editor}
+:NOTER_DOCUMENT: ${file}  ; <== special file keyword: if more than one filename
+:NOTER_PAGE:              ;     is available, the user will be prompted to choose
+:END:")))
 
 ;; copy from zaeph config for pdf annotations
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -1271,6 +1248,18 @@ numerical arguments."
     (unless activate
       (zp/pdf-view-save-buffer-maybe)))
 
+  (defun bd/pdf-annot-add-underline-markup-annotation (arg &optional activate)
+    "Add underline markup annotation.
+This wrapper includes presets which can be accessed with
+numerical arguments."
+    (interactive "P")
+    (let ((pdf-annot-activate-created-annotations (when activate t)))
+        (call-interactively #'pdf-annot-add-underline-markup-annotation))
+    (unless activate
+      (zp/pdf-view-save-buffer-maybe)))
+
+
+
   (defun zp/pdf-annot-add-highlight-markup-annotation-and-activate (arg)
     "Add highlight markup annotation and activate it.
 This wrapper includes presets which can be accessed with
@@ -1303,6 +1292,7 @@ numerical arguments."
   (define-key pdf-view-mode-map (kbd "t") 'pdf-annot-add-text-annotation)
   (define-key pdf-view-mode-map (kbd "h") 'zp/pdf-annot-add-highlight-markup-annotation)
   (define-key pdf-view-mode-map (kbd "H") 'zp/pdf-annot-add-highlight-markup-annotation-and-activate)
+  (define-key pdf-view-mode-map (kbd "x") 'bd/pdf-annot-add-underline-markup-annotation)
   (define-key pdf-view-mode-map (kbd "l") 'pdf-annot-list-annotations)
   (define-key pdf-view-mode-map (kbd "D") 'pdf-annot-delete)
   (define-key pdf-view-mode-map (kbd "O") 'org-noter-create-skeleton)
@@ -1345,7 +1335,7 @@ numerical arguments."
         org-noter-always-create-frame nil
         ;; relative to the pdf file
         org-noter-notes-search-path (list org_notes)
-        org-noter-hide-other nil
+        ;; org-noter-hide-other nil
         org-noter-doc-split-fraction '(0.57 0.43))
 
   (defun zp/org-noter-visual-line-mode ()
@@ -1454,3 +1444,4 @@ position."
   (smartparens-global-mode -1)
   (org-roam-server-mode)
   (smartparens-global-mode 1))
+

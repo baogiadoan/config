@@ -58,7 +58,7 @@
 
 
 ;; some defined key
-(global-set-key (kbd "C-c N") 'org-noter)
+(global-set-key (kbd "C-c N") 'zp/org-noter-dwim)
 (global-set-key (kbd "C-c m") 'mu4e)
 ;; yay, it worked
 
