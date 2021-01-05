@@ -55,7 +55,8 @@
 (global-set-key (kbd "C-c C-x i") 'org-insert-columns-dblock)
 (global-set-key (kbd "C-c d") 'org-decrypt-entry)
 (global-set-key (kbd "C-c e") 'org-encrypt-entry)
-
+;; archive DONE KILL CANCELLED items
+(global-set-key (kbd "C-c a") 'org-archive-done-tasks)
 
 ;; some defined key
 (global-set-key (kbd "C-c N") 'zp/org-noter-dwim)
