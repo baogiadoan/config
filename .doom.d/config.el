@@ -108,7 +108,7 @@
   (setq org-agenda-tags-todo-honor-ignore-options t)
 
   (require 'org-journal)
-  (setq org-journal-dir "~/ownCloud/org/journal/2020/")
+  (setq org-journal-dir "~/ownCloud/org/journal/2021/")
   ;; (setq org-agenda-files (list "~/ownCloud/org/journal/2020/")
   ;; (setq org-agenda-file-regexp "\\`[^.].*\\.org\\'\\|\\`[0-9]+\\'")
   ;; org-journal integrate to org-agenda
@@ -178,12 +178,11 @@
                              )
                             (:name "Important"
                                    :priority "A")
-                            (:name "Scheduled Soon"
-                                :scheduled future
-                                :order 4
-                             )
                             (:name "Next Tasks"
                                    :todo "NEXT")
+                            (:name "Scheduled Soon"
+                                :scheduled future
+                             )
                             (:name "Other Priorities"
                                    :priority< "A")
                             ;; (:name "BIG 3"
@@ -495,9 +494,9 @@
 ;; only my Macbook requires this
 ;; (add-to-list 'load-path "/usr/local/share/emacs/site-lisp/mu/mu4e")
 ;; this is for my PC at work
-;; (add-to-list 'load-path "/usr/local/share/emacs/site-lisp/mu4e/")
+(add-to-list 'load-path "/usr/local/share/emacs/site-lisp/mu4e/")
 ;; this is PC at home
-(add-to-list 'load-path "/usr/share/emacs/site-lisp/mu4e/")
+;; (add-to-list 'load-path "/usr/share/emacs/site-lisp/mu4e/")
 (require 'mu4e)
 ;; use mu4e for e-mail in emacs
 (setq mail-user-agent 'mu4e-user-agent)
@@ -773,29 +772,29 @@
 (run-at-time "24:01" nil 'bh/org-agenda-to-appt)
 
 
-;; set up org-brain
-(use-package! org-brain :ensure t
-  :init
-  (setq org-brain-path "~/ownCloud/org/")
-  ;; For Evil users
-  (with-eval-after-load 'evil
-    (evil-set-initial-state 'org-brain-visualize-mode 'emacs))
-  :config
-  (bind-key "C-c b" 'org-brain-prefix-map org-mode-map)
-  (setq org-id-track-globally t)
-  (setq org-id-locations-file "~/ownCloud/org/.org-id-locations")
-  (add-hook 'before-save-hook #'org-brain-ensure-ids-in-buffer)
-  (push '("b" "Brain" plain (function org-brain-goto-end)
-          "* %i%?" :empty-lines 1)
-        org-capture-templates)
-  (setq org-brain-visualize-default-choices 'all)
-  (setq org-brain-title-max-length 50)
-  (setq org-brain-include-file-entries nil
-        org-brain-file-entries-use-title nil)
-;; disable file entries, will enable later if I want to cross link I guess
-  (setq org-brain-headline-entry-name-format-string "%2$s")
-  (setq my/default-org-brain-file "brain")
-  (setq org-brain-default-file-parent my/default-org-brain-file))
+;; ;; set up org-brain
+;; (use-package! org-brain :ensure t
+;;   :init
+;;   (setq org-brain-path "~/ownCloud/org/")
+;;   ;; For Evil users
+;;   (with-eval-after-load 'evil
+;;     (evil-set-initial-state 'org-brain-visualize-mode 'emacs))
+;;   :config
+;;   (bind-key "C-c b" 'org-brain-prefix-map org-mode-map)
+;;   (setq org-id-track-globally t)
+;;   (setq org-id-locations-file "~/ownCloud/org/.org-id-locations")
+;;   (add-hook 'before-save-hook #'org-brain-ensure-ids-in-buffer)
+;;   (push '("b" "Brain" plain (function org-brain-goto-end)
+;;           "* %i%?" :empty-lines 1)
+;;         org-capture-templates)
+;;   (setq org-brain-visualize-default-choices 'all)
+;;   (setq org-brain-title-max-length 50)
+;;   (setq org-brain-include-file-entries nil
+;;         org-brain-file-entries-use-title nil)
+;; ;; disable file entries, will enable later if I want to cross link I guess
+;;   (setq org-brain-headline-entry-name-format-string "%2$s")
+;;   (setq my/default-org-brain-file "brain")
+;;   (setq org-brain-default-file-parent my/default-org-brain-file))
 
 ;; BUG this is the bug from the package, wait for the solution later
 ;; Allows you to edit entries directly from org-brain-visualize
@@ -910,7 +909,7 @@
 
 ;; variables for org-roam
 (setq
-   org_notes (concat (getenv "HOME") "/ownCloud/org/bibtex/notes/")
+   org_notes (concat (getenv "HOME") "/ownCloud/org/roam/notes/")
    deft-directory org_notes
    org-roam-directory org_notes
    )
@@ -923,12 +922,12 @@
 ;; bibtex-completion
 (use-package! bibtex-completion)
 
-(setq bibtex-completion-library-path '("~/ownCloud/org/bibtex"))
+(setq bibtex-completion-library-path '("~/ownCloud/org/roam"))
 ;; bibtex file stored to this location
-(setq bibtex-completion-bibliography '("~/ownCloud/org/bibtex/library.bib"))
+(setq bibtex-completion-bibliography '("~/ownCloud/org/roam/library.bib"))
 ;; this enable helm-bibtex to know where is the location of the pdf file corresponding to the bibtex
 (setq bibtex-completion-pdf-field "File")
-(setq bibtex-completion-notes-path "~/ownCloud/org/bibtex/notes")
+(setq bibtex-completion-notes-path "~/ownCloud/org/roam/notes")
 (setq bibtex-completion-pdf-symbol "⌘")
 (setq bibtex-completion-notes-symbol "✎")
 (setq bibtex-completion-notes-template-multiple-files
@@ -962,10 +961,10 @@
     (setq
          org-ref-completion-library 'org-ref-ivy-cite
          org-ref-get-pdf-filename-function 'org-ref-get-pdf-filename-helm-bibtex
-         org-ref-default-bibliography (list "~/ownCloud/org/bibtex/library.bib")
+         org-ref-default-bibliography (list "~/ownCloud/org/roam/library.bib")
          ;; org-ref-bibliography-notes "~/ownCloud/org/bibtex/notes/bibnotes.org"
          org-ref-note-title-format "* TODO %y - %t\n :PROPERTIES:\n  :Custom_ID: %k\n  :NOTER_DOCUMENT: %F\n :ROAM_KEY: cite:%k\n  :AUTHOR: %9a\n  :JOURNAL: %j\n  :YEAR: %y\n  :VOLUME: %v\n  :PAGES: %p\n  :DOI: %D\n  :URL: %U\n :END:\n\n"
-         org-ref-notes-directory "~/ownCloud/org/bibtex/notes/"
+         org-ref-notes-directory "~/ownCloud/org/roam/notes/"
          org-ref-notes-function 'orb-edit-notes
     ))
 (setq org-latex-pdf-process (list "latexmk -shell-escape -bibtex -f -pdf %f"))
@@ -987,7 +986,7 @@
   (defvar org-roam-directory nil)
   :init
   :config
-  (setq org-roam-directory "~/ownCloud/org/bibtex/notes/")
+  (setq org-roam-directory "~/ownCloud/org/roam/notes/")
   (setq
         ;; org-roam-directory (expand-file-name (or org-roam-directory "roam")
         ;;                                      org-directory)
@@ -1453,3 +1452,10 @@ position."
   (org-roam-server-mode)
   (smartparens-global-mode 1))
 
+;; mathpix
+(use-package! mathpix.el
+  :custom ((mathpix-app-id "giabaodoan1320_gmail_com_720496_ec4500")
+           (mathpix-app-key "92748711a67956f0140c"))
+  :bind
+  ("C-x m" . mathpix-screenshot)
+  )
