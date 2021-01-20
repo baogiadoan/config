@@ -14,7 +14,7 @@
  '(jdee-db-spec-breakpoint-face-colors (cons "#191C25" "#434C5E"))
  '(objed-cursor-color "#BF616A")
  '(org-agenda-files
-   '("~/ownCloud/org/weeklyreview.org" "~/ownCloud/org/someday.org" "~/ownCloud/org/phd.org" "~/ownCloud/org/refile.org" "~/ownCloud/org/todo.org" "~/ownCloud/org/blog/posts/2020-10-25.org" "~/ownCloud/org/blog/posts/index.org" "~/ownCloud/org/blog/posts/post3.org" "~/ownCloud/org/blog/posts/post_one.org" "~/ownCloud/org/blog/posts/sitemap.org" "~/ownCloud/org/blog/index.org" "~/ownCloud/org/blog/remember.org" "~/ownCloud/org/intuition/GAN.org" "~/ownCloud/org/latex/intro.org" "~/ownCloud/org/literature/adversarial.org" "~/ownCloud/org/literature/backdoor.org" "~/ownCloud/org/tutorials/agenda-basics.org" "~/ownCloud/org/tutorials/basic-orgs.org" "~/ownCloud/org/writing/writing.org" "/home/user/ownCloud/org/journal/2021/20210114"))
+   '("~/ownCloud/org/weeklyreview.org" "~/ownCloud/org/someday.org" "~/ownCloud/org/phd.org" "~/ownCloud/org/refile.org" "~/ownCloud/org/todo.org" "~/ownCloud/org/blog/posts/2020-10-25.org" "~/ownCloud/org/blog/posts/index.org" "~/ownCloud/org/blog/posts/post3.org" "~/ownCloud/org/blog/posts/post_one.org" "~/ownCloud/org/blog/posts/sitemap.org" "~/ownCloud/org/blog/index.org" "~/ownCloud/org/blog/remember.org" "~/ownCloud/org/intuition/GAN.org" "~/ownCloud/org/latex/intro.org" "~/ownCloud/org/literature/adversarial.org" "~/ownCloud/org/literature/backdoor.org" "~/ownCloud/org/tutorials/agenda-basics.org" "~/ownCloud/org/tutorials/basic-orgs.org" "~/ownCloud/org/writing/writing.org" "/home/user/ownCloud/org/journal/2021/20210120"))
  '(org-stuck-projects '("+PROJECT/-DONE-KILL" ("TODO" "NEXT") nil ""))
  '(org-todo-keyword-faces
    '(("[-]" . +org-todo-active)

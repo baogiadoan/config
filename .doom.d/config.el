@@ -1457,3 +1457,8 @@ position."
            (mathpix-app-key "92748711a67956f0140c"))
   :bind
   ("C-x m" . mathpix-screenshot))
+
+;; debug the mu4e mail
+;; damn this helps to prevent warning issue in mu4e that I tried to fix for a long time
+(setq smtpmail-debug-info t)
+;; (setq auth-source-debug t)
