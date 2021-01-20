@@ -1,11 +1,11 @@
 ;;; bindings.el -*- lexical-binding: t; -*-
 
-(map!
- "C-h"  #'evil-window-left
- "C-l"  #'evil-window-right
- "C-j"  #'evil-window-down
- "C-k"  #'evil-window-up
- )
+;; (map!
+;;  "C-h"  #'evil-window-left
+;;  "C-l"  #'evil-window-right
+;;  "C-j"  #'evil-window-down
+;;  "C-k"  #'evil-window-up
+;;  )
 
 (map! :leader
       (:prefix ("j" . "journal") ;; org-journal bindings
@@ -35,18 +35,24 @@
  "m" #'org-journal-search-calendar-month
  "y" #'org-journal-search-calendar-year)
 
-;; try with my custom keybindings to move around windows
-(define-key evil-normal-state-map (kbd "C-l") 'evil-window-right)
-(define-key evil-normal-state-map (kbd "C-h") 'evil-window-left)
-(define-key evil-normal-state-map (kbd "C-j") 'evil-window-down)
-(define-key evil-normal-state-map (kbd "C-k") 'evil-window-up)
+;; ;; try with my custom keybindings to move around windows
+;; (define-key evil-normal-state-map (kbd "C-l") 'evil-window-right)
+;; (define-key evil-normal-state-map (kbd "C-h") 'evil-window-left)
+;; (define-key evil-normal-state-map (kbd "C-j") 'evil-window-down)
+;; (define-key evil-normal-state-map (kbd "C-k") 'evil-window-up)
 
 
-;; projectile mode
-(define-key evil-window-map (kbd "C-l") 'evil-window-right)
-(define-key evil-window-map (kbd "C-h") 'evil-window-left)
-(define-key evil-window-map (kbd "C-j") 'evil-window-down)
-(define-key evil-window-map (kbd "C-k") 'evil-window-up)
+;; ;; projectile mode
+;; (define-key evil-window-map (kbd "C-l") 'evil-window-right)
+;; (define-key evil-window-map (kbd "C-h") 'evil-window-left)
+;; (define-key evil-window-map (kbd "C-j") 'evil-window-down)
+;; (define-key evil-window-map (kbd "C-k") 'evil-window-up)
+
+
+(global-set-key (kbd "C-l") 'evil-window-right)
+(global-set-key (kbd "C-h") 'evil-window-left)
+(global-set-key (kbd "C-j") 'evil-window-down)
+(global-set-key (kbd "C-k") 'evil-window-up)
 
 ;; some of my keybinding stealed from pros
 (global-set-key (kbd "<f12>") 'org-agenda)

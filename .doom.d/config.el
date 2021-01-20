@@ -1078,7 +1078,6 @@
 :URL: ${url}
 :AUTHOR: ${author-or-editor}
 :NOTER_DOCUMENT: ${file}  ; <== special file keyword: if more than one filename
-:NOTER_PAGE:              ;     is available, the user will be prompted to choose
 :END:")))
 
 ;; copy from zaeph config for pdf annotations
@@ -1457,5 +1456,4 @@ position."
   :custom ((mathpix-app-id "giabaodoan1320_gmail_com_720496_ec4500")
            (mathpix-app-key "92748711a67956f0140c"))
   :bind
-  ("C-x m" . mathpix-screenshot)
-  )
+  ("C-x m" . mathpix-screenshot))
