@@ -1451,13 +1451,6 @@ position."
   (org-roam-server-mode)
   (smartparens-global-mode 1))
 
-;; mathpix
-(use-package! mathpix.el
-  :custom ((mathpix-app-id "giabaodoan1320_gmail_com_720496_ec4500")
-           (mathpix-app-key "92748711a67956f0140c"))
-  :bind
-  ("C-x m" . mathpix-screenshot))
-
 ;; debug the mu4e mail
 ;; damn this helps to prevent warning issue in mu4e that I tried to fix for a long time
 (setq smtpmail-debug-info t)
