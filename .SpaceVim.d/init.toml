@@ -66,8 +66,8 @@
 [[layers]]
   name = "tmux"
 
-[[layers]]
-  name = "denite"
+# [[layers]]
+  # name = "denite"
 
 ##################################################
 # Custom plugins
@@ -77,9 +77,9 @@
   repo = "tpope/vim-fugitive"
   merge = false
 
-[[custom_plugins]]
-  repo = "christoomey/vim-tmux-navigator"
-  merged = false
+# [[custom_plugins]]
+  # repo = "christoomey/vim-tmux-navigator"
+  # merged = false
 
 
 [[custom_plugins]]
