@@ -48,9 +48,10 @@
 (package! org-roam-server)
 (package! beacon)
 (package! bibtex-completion)
+(package! org-pdfview)
 
 ;; mathpix
-(package! example
+(package! mathpix
   :recipe (:host github :repo "jethrokuan/mathpix.el"))
 ;; To install a package directly from a remote git repo, you must specify a
 ;; `:recipe'. You'll find documentation on what `:recipe' accepts here:
