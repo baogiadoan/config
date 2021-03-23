@@ -49,7 +49,17 @@
 (package! beacon)
 (package! bibtex-completion)
 (package! org-pdfview)
+(package! org-gcal)
+(package! request)
+(package! persist)
+(package! calfw)
+(package! calfw-org)
+(package! calfw-ical)
+(package! calfw-gcal)
 
+;; alert
+(package! alert
+  :recipe (:host github :repo "jwiegley/alert"))
 ;; mathpix
 (package! mathpix
   :recipe (:host github :repo "jethrokuan/mathpix.el"))
