@@ -30,13 +30,21 @@ Prior to the installation make sure you have committed the alias to your .bashrc
 alias config='/usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
 ```
 And that your source repository ignores the folder where you'll clone it, so that you don't create weird recursion problems:
-```echo ".cfg" >> .gitignore```
+```
+echo ".cfg" >> .gitignore
+```
 Now clone your dotfiles into a bare repository in a "dot" folder of your $HOME:
-```git clone --bare <git-repo-url> $HOME/.cfg```
+```
+git clone --bare <git-repo-url> $HOME/.cfg
+```
 Define the alias in the current shell scope:
-```alias config='/usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME'```
+```
+alias config='/usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
+```
 Checkout the actual content from the bare repository to your $HOME:
-```config checkout```
+```
+config checkout
+```
 
 The step above might fail with a message like:
 ```
