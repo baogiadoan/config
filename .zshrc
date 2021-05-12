@@ -171,7 +171,7 @@ test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell
 alias ls=colorls — light — sort-dirs — report
 alias lc=colorls — tree — light
 alias vi=nvim
-alias openshot="~/..AppImage/OpenShot-v2.5.1-x86_64.AppImage"
+alias openshot="~/.AppImage/OpenShot-v2.5.1-x86_64.AppImage"
 alias stretchly="~/.AppImage/Stretchly-1.2.0.AppImage"
 
 #Weather

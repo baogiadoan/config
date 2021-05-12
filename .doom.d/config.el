@@ -33,7 +33,7 @@
 (defun reload-theme (frame)
   (with-selected-frame frame
     (if (display-graphic-p)
-        (load-theme 'doom-one t)
+        (load-theme 'doom-molokai t)
         (load-theme 'nord t))))
 
 ;; (add-hook 'after-make-frame-functions #'reload-theme)
@@ -74,6 +74,9 @@
   (setq org-agenda-log-mode-items (quote (closed state)))
   ;; put the state change into drawer
   (setq org-log-into-drawer t)
+
+  ;; remove the schedule after the deadline
+  ;; (setq org-agenda-skip-scheduled-if-deadline-is-shown t)
   ;; could be multiple files
   ;; (setq org-log-done 'time) ;; log the time after done the task
   ;; (setq org-log-done 'note) ;; log the time and give a NOTE after done the task
@@ -1477,8 +1480,8 @@ position."
  '(jdee-db-requested-breakpoint-face-colors (cons "#191C25" "#A3BE8C"))
  '(jdee-db-spec-breakpoint-face-colors (cons "#191C25" "#434C5E"))
  '(objed-cursor-color "#BF616A")
- '(org-agenda-files
-   '("~/ownCloud/org/weeklyreview.org" "~/ownCloud/org/someday.org" "~/ownCloud/org/phd.org" "~/ownCloud/org/refile.org" "~/ownCloud/org/todo.org" ))
+ ;; '(org-agenda-files
+ ;;   '("~/ownCloud/org/weeklyreview.org" "~/ownCloud/org/someday.org" "~/ownCloud/org/phd.org" "~/ownCloud/org/refile.org" "~/ownCloud/org/todo.org" ))
  '(org-stuck-projects '("+PROJECT/-DONE-KILL" ("TODO" "NEXT") nil ""))
  '(org-todo-keyword-faces
    '(("[-]" . +org-todo-active)
@@ -1495,11 +1498,6 @@ position."
  '(pdf-view-midnight-colors (cons "#ECEFF4" "#2E3440"))
  '(rustic-ansi-faces
    ["#2E3440" "#BF616A" "#A3BE8C" "#EBCB8B" "#81A1C1" "#B48EAD" "#88C0D0" "#ECEFF4"])
- '(safe-local-variable-values
-   '((eval setq-local org-roam-directory
-           (expand-file-name "./"))
-     (org-roam-db-location . "./org-roam.db")
-     (org-roam-directory . ".")))
  '(smtpmail-smtp-server "smtp.gmail.com")
  '(smtpmail-smtp-service 25)
  '(vc-annotate-background "#2E3440")
@@ -1559,5 +1557,44 @@ position."
 :config
 (require 'calfw-gcal))
 
+;; SECRET, not push to public github
+;;
+(use-package! mathpix.el
+  ;; :straight (:host github :repo "jethrokuan/mathpix.el")
+  :custom ((mathpix-app-id "giabaodoan1320_gmail_com_720496_ec4500")
+           (mathpix-app-key "92748711a67956f0140c"))
+  :bind
+  ("C-x m" . mathpix-screenshot))
+
+
+;; (use-package! org-gcal
+;; :ensure t
+;; :config
+;; (setq org-gcal-client-id "68096259315-3m4bj04nfqmtcr1ekhr7uhkq6u9448q4.apps.googleusercontent.com"
+;;       org-gcal-client-secret "btDhtmkavizoGhz9s-VwtIEE"
+;;       org-gcal-file-alist '(("giabaodoan1320@gmail.com" .  "~/ownCloud/org/gcal.org"))))
+;; (add-hook 'org-agenda-mode-hook (lambda () (org-gcal-sync) ))
+;; (add-hook 'org-capture-after-finalize-hook (lambda () (org-gcal-sync) ))
+
+;; END of SECRET
+
 ;; jump to beginning of the next page in pdf-tools instead of the end
 (advice-add 'pdf-view-next-page-command :after #'image-bob)
+
+
+(setq pdf-misc-print-program-executable "/usr/bin/lpr")
+
+;; temporarily fix the broken buffer leads to broken org-capture
+(defun +org--restart-mode-h ()
+    "Restart `org-mode', but only once."
+    (remove-hook 'doom-switch-buffer-hook #'+org--restart-mode-h
+                 'local)
+    (delq! (current-buffer) org-agenda-new-buffers)
+    (let ((file buffer-file-name)
+          (old-buffer (current-buffer))
+          (inhibit-redisplay t)
+          new-buffer)
+      (kill-buffer)
+      (setq new-buffer (find-file file))
+      (unless (buffer-live-p old-buffer)
+        (make-indirect-buffer new-buffer old-buffer 'clone))))

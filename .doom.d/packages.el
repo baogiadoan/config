@@ -44,7 +44,10 @@
 (package! sqlite)
 (package! company-org-roam)
 (package! org-noter-pdftools)
-(package! pdf-tools)
+(package! pdf-tools
+  :pin "500191c9e102674c66f60eb8fa6594b10ac9c7e6"
+  :recipe (:host github :repo "vedang/pdf-tools")
+  )
 (package! org-roam-server)
 (package! beacon)
 (package! bibtex-completion)

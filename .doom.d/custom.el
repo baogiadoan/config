@@ -14,7 +14,7 @@
  '(jdee-db-spec-breakpoint-face-colors (cons "#191C25" "#434C5E"))
  '(objed-cursor-color "#BF616A")
  '(org-agenda-files
-   '("~/ownCloud/org/weeklyreview.org" "~/ownCloud/org/someday.org" "~/ownCloud/org/phd.org" "~/ownCloud/org/refile.org" "~/ownCloud/org/todo.org" "/home/user/ownCloud/org/journal/2021/20210323"))
+   '("~/ownCloud/org/freelancer.org" "~/ownCloud/org/gcal.org" "~/ownCloud/org/weeklyreview.org" "~/ownCloud/org/someday.org" "~/ownCloud/org/phd.org" "~/ownCloud/org/refile.org" "~/ownCloud/org/todo.org" "/home/user/ownCloud/org/journal/2021/20210511"))
  '(org-id-locations-file "~/ownCloud/org/.orgids")
  '(org-stuck-projects '("+PROJECT/-DONE-KILL" ("TODO" "NEXT") nil ""))
  '(org-todo-keyword-faces
@@ -29,16 +29,11 @@
      (sequence "[ ](T)" "[-](S)" "[?](W)" "|" "[X](D)")))
  '(package-selected-packages
    '(python-black org-id-cleanup org-fancy-priorities forge org-pdftools lsp-python-ms conda org-download evil-mu4e))
- '(pdf-misc-print-program "/usr/bin/lpr" t)
- '(pdf-misc-print-program-args '("-o media=a4" "-o fitplot") t)
+ '(pdf-misc-print-program "/usr/bin/lpr")
+ '(pdf-misc-print-program-args '("-o media=a4" "-o fitplot"))
  '(pdf-view-midnight-colors (cons "#ECEFF4" "#2E3440"))
  '(rustic-ansi-faces
    ["#2E3440" "#BF616A" "#A3BE8C" "#EBCB8B" "#81A1C1" "#B48EAD" "#88C0D0" "#ECEFF4"])
- '(safe-local-variable-values
-   '((eval setq-local org-roam-directory
-           (expand-file-name "./"))
-     (org-roam-db-location . "./org-roam.db")
-     (org-roam-directory . ".")))
  '(smtpmail-smtp-server "smtp.gmail.com")
  '(smtpmail-smtp-service 25)
  '(vc-annotate-background "#2E3440")
